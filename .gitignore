@@ -2,13 +2,10 @@
 **/*.log*
 
 # frontend
-frontend/node_modules/
-frontend/dist/
-frontend/dist-ssr/
-quickview-front/*.local
-
-# data-fetcher
-frontend/public/data/
+node_modules/
+dist/
+dist-ssr/
+*.local
 
 # Editor directories and files
 .vscode/*

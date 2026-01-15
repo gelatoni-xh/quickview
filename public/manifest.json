@@ -8,14 +8,6 @@
     "newtab": "index.html"
   },
 
-  "host_permissions": [
-    "https://worldtimeapi.org/*"
-  ],
-
-  "background": {
-    "service_worker": "background.js"
-  },
-
   "permissions": [
     "storage"
   ]
