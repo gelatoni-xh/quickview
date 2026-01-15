@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 interface HealthResponse {
-    status: string
+    status: string,
+    env: string
 }
 
 export function useSystemHealth() {

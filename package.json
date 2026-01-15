@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode development",
+    "remote": "vite --mode development.remote",
     "build": "tsc -b && vite build",
     "lint": "eslint ..",
     "preview": "vite preview"
@@ -14,7 +15,8 @@
     "http-proxy-agent": "^7.0.2",
     "https-proxy-agent": "^7.0.6",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "socks-proxy-agent": "^8.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

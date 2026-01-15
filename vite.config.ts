@@ -1,18 +1,25 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
-import { HttpProxyAgent } from 'http-proxy-agent'
+import { SocksProxyAgent } from 'socks-proxy-agent'
+import type { ConfigEnv } from 'vite'
 
-const agent = new HttpProxyAgent('http://127.0.0.1:10090')
+export default ({ mode }: ConfigEnv) => {
+  const env = loadEnv(mode, process.cwd(), '')
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://3.112.249.180:8080',
-        changeOrigin: true,
-        agent
+  const agent = env.VITE_USE_PROXY === 'true'
+      ? new SocksProxyAgent(env.VITE_PROXY_URL)
+      : undefined
+
+  return defineConfig({
+    plugins: [react()],
+    server: {
+      proxy: {
+        '/api': {
+          target: env.VITE_API_BASE_URL,
+          changeOrigin: true,
+          agent
+        }
       }
     }
-  }
-})
+  })
+}
