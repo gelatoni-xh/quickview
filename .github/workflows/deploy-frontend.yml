@@ -33,7 +33,8 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_PEM }}
+          key: |
+            ${{ secrets.SERVER_PEM }}
           port: 22
           script: |
             mkdir -p /home/ubuntu/quickview
