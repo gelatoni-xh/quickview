@@ -3,12 +3,12 @@ name: Deploy Quickview Frontend
 on:
   push:
     branches:
-      - main  # 只在 main 分支 push 时触发
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: prod   # 使用 prod Environment 配置的 Secrets & Variables
+    environment: prod   # 使用 prod Environment 的 Secrets
 
     steps:
       # 1️⃣ 拉取代码
@@ -28,32 +28,43 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      # 5️⃣ 确保服务器目录存在
-      - name: Create target directory on server
+      # 5️⃣ 确保服务器目录存在（标准静态目录）
+      - name: Ensure web directory exists
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: |
-            ${{ secrets.SERVER_PEM }}
+          key: ${{ secrets.SERVER_PEM }}
           port: 22
           script: |
-            mkdir -p /home/ubuntu/quickview
+            sudo mkdir -p /var/www/quickview
+            sudo chown -R www-data:www-data /var/www/quickview
 
-      # 6️⃣ 上传 dist 到服务器
-      - name: Upload dist to server
+      # 6️⃣ 上传 dist 内容到 /var/www/quickview
+      - name: Upload dist to web root
         uses: appleboy/scp-action@v0.1.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: |
-            ${{ secrets.SERVER_PEM }}
+          key: ${{ secrets.SERVER_PEM }}
           port: 22
           source: "dist/*"
-          target: "/home/ubuntu/quickview/"
+          target: "/var/www/quickview/"
           overwrite: true
 
-      # 7️⃣ 可选：重启 Nginx 保证新前端生效
+      # 7️⃣ 修正权限（防止某些文件是 ubuntu 用户）
+      - name: Fix permissions
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_PEM }}
+          port: 22
+          script: |
+            sudo chown -R www-data:www-data /var/www/quickview
+            sudo chmod -R 755 /var/www/quickview
+
+      # 8️⃣ 重载 Nginx
       - name: Reload Nginx
         uses: appleboy/ssh-action@v0.1.7
         with:
