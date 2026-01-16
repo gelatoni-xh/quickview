@@ -44,7 +44,8 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_PEM }}
+          key: |
+            ${{ secrets.SERVER_PEM }}
           port: 22
           source: "dist/*"
           target: "/home/ubuntu/quickview/"
