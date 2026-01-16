@@ -11,6 +11,12 @@ jobs:
       # 1️⃣ 拉取代码（可选）
       - uses: actions/checkout@v3
 
+      # debug host & port
+      - name: Debug secrets
+        run: |
+          echo "HOST length: ${#${{ secrets.SERVER_HOST }}}"
+          echo "USER length: ${#${{ secrets.SERVER_USER }}}"
+
       # 2️⃣ 保存 secrets 的 PEM 到临时文件
       - name: Save PEM to file
         run: |
