@@ -10,7 +10,7 @@ export default function NoticeModal({ notice, onClose }: Props) {
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded max-w-lg w-full max-h-[80vh] overflow-auto">
-                <h3 className="font-semibold mb-4">公告详情</h3>
+                <h3 className="font-semibold mb-4">{notice.title}</h3>
 
                 <div className="prose text-sm">
                     <ReactMarkdown>{notice.content}</ReactMarkdown>

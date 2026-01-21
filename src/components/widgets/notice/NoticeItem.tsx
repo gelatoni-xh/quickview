@@ -15,9 +15,14 @@ export default function NoticeItem({ notice }: Props) {
                 {new Date(notice.createTime).toLocaleString()}
             </p>
 
-            <p className="text-sm text-gray-800 line-clamp-2">
+            <div className="text-sm font-medium text-gray-900 line-clamp-1">
+                {notice.title}
+            </div>
+
+            <div className="text-sm text-gray-600 line-clamp-2 mt-1">
                 {notice.content}
-            </p>
+            </div>
+
 
             <button
                 className="text-blue-600 text-xs mt-1"
