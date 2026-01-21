@@ -16,6 +16,7 @@
     "https-proxy-agent": "^7.0.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-markdown": "^10.1.0",
     "socks-proxy-agent": "^8.0.5"
   },
   "devDependencies": {
