@@ -101,10 +101,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUserInfo(newUserInfo)
         setError(null)
 
-        // 保存到 localStorage
+        // 每次登录都覆盖 token：先清除旧的，再设置新的
+        localStorage.removeItem('token')
         if (newUserInfo.token) {
             localStorage.setItem('token', newUserInfo.token)
         }
+        localStorage.removeItem('userInfo')
         localStorage.setItem('userInfo', JSON.stringify({
             user: newUserInfo.user,
             roleCodes: newUserInfo.roleCodes,
