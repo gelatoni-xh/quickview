@@ -17,11 +17,11 @@ export function useTodoTags() {
             setError(null)
 
             const token = localStorage.getItem('token')
-            const res = await fetch('/api/todo/tag/list', {
-                headers: {
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                },
-            })
+            const headers: HeadersInit = {}
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`
+            }
+            const res = await fetch('/api/todo/tag/list', { headers })
             const result: TodoTagListResponse = await res.json()
 
             setData(Array.isArray(result.data) ? result.data : [])

@@ -36,12 +36,16 @@ export function useNotices(pageNum: number, pageSize: number) {
             setLoading(true)
             setError(null)
 
+            const token = localStorage.getItem('token')
+            const headers: HeadersInit = {
+                'Content-Type': 'application/json',
+            }
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`
+            }
             const res = await fetch('/api/notice/page', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(localStorage.getItem('token') ? { Authorization: `Bearer ${localStorage.getItem('token')}` } : {}),
-                },
+                headers,
                 body: JSON.stringify({
                     pageNum,
                     pageSize,
