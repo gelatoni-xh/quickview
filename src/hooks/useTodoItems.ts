@@ -23,7 +23,12 @@ export function useTodoItems(tagId: number | null) {
                 ? `/api/todo/item/listByTag?tagId=${tagId}`
                 : '/api/todo/item/list'
 
-            const res = await fetch(url)
+            const token = localStorage.getItem('token')
+            const res = await fetch(url, {
+                headers: {
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+            })
             const result: TodoItemListResponse = await res.json()
 
             setData(Array.isArray(result.data) ? result.data : [])

@@ -63,13 +63,16 @@ export function useCreateNotice() {
 
             // 从 localStorage 获取认证 Token
             const token = localStorage.getItem('token')
+            if (!token) {
+                setError('未登录，请先登录')
+                return false
+            }
 
             const res = await fetch('/api/notice/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 如果有 Token，添加到请求头
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(params),
             })

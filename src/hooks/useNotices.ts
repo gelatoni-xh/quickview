@@ -40,6 +40,7 @@ export function useNotices(pageNum: number, pageSize: number) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(localStorage.getItem('token') ? { Authorization: `Bearer ${localStorage.getItem('token')}` } : {}),
                 },
                 body: JSON.stringify({
                     pageNum,

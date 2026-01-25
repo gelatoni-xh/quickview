@@ -2,13 +2,15 @@
  * 应用程序根组件
  *
  * 定义应用的整体布局结构：
+ * - AuthProvider: 认证状态管理
  * - Sidebar: 可折叠的侧边导航栏
- * - Header: 顶部标题栏，包含侧边栏开关按钮
+ * - Header: 顶部标题栏，包含侧边栏开关按钮和用户信息
  * - Dashboard: 主内容区域，展示各种 Widget
  *
  * 布局采用 Flexbox，侧边栏为固定宽度，主内容区自适应。
  */
 import { useState } from 'react'
+import { AuthProvider } from './contexts/AuthContext'
 import Sidebar from './components/layout/Sidebar.tsx'
 import Header from './components/layout/Header.tsx'
 import Dashboard from './pages/Dashboard.tsx'
@@ -18,15 +20,17 @@ export default function App() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
     return (
-        <div className="h-screen flex bg-gray-100">
-            {/* 侧边导航栏 - 移动端默认隐藏，点击按钮展开 */}
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <AuthProvider>
+            <div className="h-screen flex bg-gray-100">
+                {/* 侧边导航栏 - 移动端默认隐藏，点击按钮展开 */}
+                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-            {/* 主内容区域 */}
-            <div className="flex flex-col flex-1">
-                <Header setSidebarOpen={setSidebarOpen} />
-                <Dashboard />
+                {/* 主内容区域 */}
+                <div className="flex flex-col flex-1">
+                    <Header setSidebarOpen={setSidebarOpen} />
+                    <Dashboard />
+                </div>
             </div>
-        </div>
+        </AuthProvider>
     )
 }

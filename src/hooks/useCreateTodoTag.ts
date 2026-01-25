@@ -18,12 +18,16 @@ export function useCreateTodoTag() {
             setError(null)
 
             const token = localStorage.getItem('token')
+            if (!token) {
+                setError('未登录，请先登录')
+                return false
+            }
 
             const res = await fetch('/api/todo/tag/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(params),
             })
