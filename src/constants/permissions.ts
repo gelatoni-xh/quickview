@@ -10,4 +10,6 @@ export const PERMISSIONS = {
     NOTICE_CREATE: 'PERM_NOTICE_CREATE',
     /** TODO 权限（用于所有 TODO 相关的操作） */
     TODO: 'PERM_TODO',
+    /** 活动记录权限（用于所有活动记录相关的操作） */
+    ACTIVITY: 'PERM_ACTIVITY',
 } as const

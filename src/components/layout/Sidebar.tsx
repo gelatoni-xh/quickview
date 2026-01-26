@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 /**
  * 侧边导航栏组件
  *
@@ -31,7 +33,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 <button
                     onClick={() => setSidebarOpen(false)}
                     className="text-gray-500 hover:text-black text-lg leading-none"
-                    aria-label="关闭侧边栏"
+                    aria-label="Close sidebar"
                 >
                     ×
                 </button>
@@ -39,8 +41,20 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
             {/* 导航菜单 */}
             <nav className="px-4 space-y-2">
-                <div className="text-sm text-gray-600 font-medium">Home</div>
-                {/* 预留位置：可以添加更多导航项 */}
+                <Link 
+                    to="/dashboard" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSidebarOpen(false)}
+                >
+                    Dashboard
+                </Link>
+                <Link 
+                    to="/activity-log" 
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSidebarOpen(false)}
+                >
+                    Activity Log
+                </Link>
             </nav>
         </aside>
     )

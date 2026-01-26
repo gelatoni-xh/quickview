@@ -10,12 +10,14 @@
  * 布局采用 Flexbox，侧边栏为固定宽度，主内容区自适应。
  */
 import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 import Sidebar from './components/layout/Sidebar.tsx'
 import Header from './components/layout/Header.tsx'
 import Dashboard from './pages/Dashboard.tsx'
+import ActivityLog from './pages/ActivityLog.tsx'
 
-export default function App() {
+function AppContent() {
     // 控制侧边栏的显示/隐藏状态
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -28,9 +30,21 @@ export default function App() {
                 {/* 主内容区域 */}
                 <div className="flex flex-col flex-1">
                     <Header setSidebarOpen={setSidebarOpen} />
-                    <Dashboard />
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/activity-log" element={<ActivityLog />} />
+                    </Routes>
                 </div>
             </div>
         </AuthProvider>
+    )
+}
+
+export default function App() {
+    return (
+        <Router>
+            <AppContent />
+        </Router>
     )
 }
