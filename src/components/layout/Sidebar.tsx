@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
+import { PERMISSIONS } from '../../constants/permissions'
 
 /**
  * 侧边导航栏组件
@@ -21,6 +23,8 @@ type SidebarProps = {
 }
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
+    const { hasPermission } = useAuth();
+
     return (
         <aside
             className={`w-56 bg-white border-r fixed inset-y-0 left-0 z-40 transform transition-transform duration-200
@@ -48,13 +52,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 >
                     Dashboard
                 </Link>
-                <Link 
-                    to="/activity-log" 
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                    onClick={() => setSidebarOpen(false)}
-                >
-                    Activity Log
-                </Link>
+                {/* 只有有权限的用户才能看到Activity Log链接 */}
+                {hasPermission(PERMISSIONS.ACTIVITY) && (
+                    <Link 
+                        to="/activity-log" 
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        Activity Log
+                    </Link>
+                )}
             </nav>
         </aside>
     )

@@ -3,7 +3,7 @@
  *
  * 用于直观回顾一天的时间结构。
  */
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useActivityTags } from '../hooks/useActivityTags'
 import { useActivityBlocks } from '../hooks/useActivityBlocks'
@@ -45,12 +45,14 @@ export default function ActivityLog() {
 
     const dateString = useMemo(() => formatDate(currentDate), [currentDate])
 
+    // 使用 useCallback 包装 refresh 函数，避免每次渲染都创建新函数
     const {
         data: tags,
         loading: tagsLoading,
         error: tagsError,
         refresh: refreshTags,
     } = useActivityTags()
+    
     const {
         data: blocks,
         loading: blocksLoading,
@@ -85,34 +87,34 @@ export default function ActivityLog() {
         })
     }, [blocks])
 
-    const handleShiftDate = (days: number) => {
+    const handleShiftDate = useCallback((days: number) => {
         setCurrentDate((prev) => {
             const next = new Date(prev)
             next.setDate(next.getDate() + days)
             return next
         })
-    }
+    }, [])
 
-    const openCreateModal = (start: string) => {
+    const openCreateModal = useCallback((start: string) => {
         setSelectedBlock(null)
         setSelectedStart(start)
         const [hour, minute] = start.split(':').map(Number)
         const nextMinutes = hour * 60 + minute + 30
         setSelectedEnd(formatTime(Math.min(nextMinutes, 24 * 60)))
         setModalOpen(true)
-    }
+    }, [])
 
-    const openEditModal = (block: ActivityBlock) => {
+    const openEditModal = useCallback((block: ActivityBlock) => {
         setSelectedBlock(block)
         setSelectedStart(block.startTime.slice(0, 5))
         setSelectedEnd(block.endTime.slice(0, 5))
         setModalOpen(true)
-    }
+    }, [])
 
-    const refreshAll = () => {
+    const refreshAll = useCallback(() => {
         refreshBlocks()
         refreshTags()
-    }
+    }, [refreshBlocks, refreshTags])
 
     const loading = tagsLoading || blocksLoading
     const error = blocksError || tagsError

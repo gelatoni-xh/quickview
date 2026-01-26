@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import LoginModal from '../auth/LoginModal'
 
@@ -18,6 +19,7 @@ type HeaderProps = {
 export default function Header({ setSidebarOpen }: HeaderProps) {
     const { userInfo, isAuthenticated, logout } = useAuth()
     const [showLoginModal, setShowLoginModal] = useState(false)
+    const navigate = useNavigate()
 
     /**
      * 处理登录成功
@@ -32,8 +34,8 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
      */
     const handleLogout = () => {
         logout()
-        // 登出后刷新页面
-        window.location.reload()
+        // 登出后导航回首页（Dashboard）
+        navigate('/dashboard')
     }
 
     return (
