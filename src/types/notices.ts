@@ -4,6 +4,8 @@
  * 与后端 NoticeDTO 对应的前端类型。
  */
 export interface Notice {
+    /** 公告 ID */
+    id: number
     /** 公告标题 */
     title: string
     /** 公告内容，支持 Markdown 格式 */

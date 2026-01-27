@@ -11,10 +11,14 @@
  * - 编辑 TODO（切换完成状态、修改内容）
  */
 import { useState } from 'react'
-import { Plus, Tag } from 'lucide-react'
+import { Plus, Tag, Trash2 } from 'lucide-react'
 import { useTodoTags } from '../../hooks/useTodoTags'
 import { useTodoItems } from '../../hooks/useTodoItems'
 import { useUpdateTodoItem } from '../../hooks/useUpdateTodoItem'
+import { useDeleteTodoItem } from '../../hooks/useDeleteTodoItem'
+import { useDeleteTodoTag } from '../../hooks/useDeleteTodoTag'
+import { useAuth } from '../../hooks/useAuth'
+import { PERMISSIONS } from '../../constants/permissions'
 import TodoItemRow from './todo/TodoItemRow'
 import {TodoEditorModal} from './todo/TodoEditorModal'
 import TagEditorModal from './todo/TagEditorModal'
@@ -30,6 +34,12 @@ export default function TodoCard() {
 
     // 更新 TODO
     const { updateItem } = useUpdateTodoItem()
+
+    const { deleteItem } = useDeleteTodoItem()
+    const { deleteTag } = useDeleteTodoTag()
+
+    const { hasPermission } = useAuth()
+    const canTodo = hasPermission(PERMISSIONS.TODO)
 
     // 弹窗状态
     const [showTagModal, setShowTagModal] = useState(false)
@@ -65,6 +75,37 @@ export default function TodoCard() {
         setShowTodoModal(true)
     }
 
+    const handleDeleteItem = async (item: TodoItem) => {
+        if (!canTodo) {
+            return
+        }
+        const ok = window.confirm('确定删除该 TODO 吗？')
+        if (!ok) {
+            return
+        }
+        const success = await deleteItem(item.id)
+        if (success) {
+            refreshItems()
+        }
+    }
+
+    const handleDeleteTag = async (tagId: number) => {
+        if (!canTodo) {
+            return
+        }
+        const ok = window.confirm('确定删除该标签吗？删除后关联该标签的 TODO 会取消关联。')
+        if (!ok) {
+            return
+        }
+        const success = await deleteTag(tagId)
+        if (success) {
+            if (selectedTagId === tagId) {
+                setSelectedTagId(null)
+            }
+            refreshAll()
+        }
+    }
+
     const loading = tagsLoading || itemsLoading
 
     return (
@@ -75,21 +116,25 @@ export default function TodoCard() {
                     <h2 className="font-semibold">TODO</h2>
                     <div className="flex items-center gap-1">
                         {/* 新增标签按钮 */}
-                        <button
-                            onClick={() => setShowTagModal(true)}
-                            className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                            title="新增标签"
-                        >
-                            <Tag size={16} />
-                        </button>
+                        {canTodo && (
+                            <button
+                                onClick={() => setShowTagModal(true)}
+                                className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                title="新增标签"
+                            >
+                                <Tag size={16} />
+                            </button>
+                        )}
                         {/* 新增 TODO 按钮 */}
-                        <button
-                            onClick={handleAddTodo}
-                            className="p-1 rounded hover:bg-gray-100 text-gray-600"
-                            title="新增 TODO"
-                        >
-                            <Plus size={18} />
-                        </button>
+                        {canTodo && (
+                            <button
+                                onClick={handleAddTodo}
+                                className="p-1 rounded hover:bg-gray-100 text-gray-600"
+                                title="新增 TODO"
+                            >
+                                <Plus size={18} />
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -105,16 +150,30 @@ export default function TodoCard() {
                         全部
                     </button>
                     {tags.map((tag) => (
-                        <button
+                        <div
                             key={tag.id}
-                            onClick={() => setSelectedTagId(tag.id)}
-                            className={`px-2 py-0.5 text-xs rounded-full border transition-colors
-                                ${selectedTagId === tag.id
-                                    ? 'bg-blue-500 text-white border-blue-500'
-                                    : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}
+                            className="flex items-center"
                         >
-                            {tag.name}
-                        </button>
+                            <button
+                                onClick={() => setSelectedTagId(tag.id)}
+                                className={`px-2 py-0.5 text-xs rounded-full border transition-colors
+                                    ${selectedTagId === tag.id
+                                        ? 'bg-blue-500 text-white border-blue-500'
+                                        : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}
+                            >
+                                {tag.name}
+                            </button>
+                            {canTodo && (
+                                <button
+                                    className="ml-0.5 p-1 text-gray-400 hover:text-red-600"
+                                    title="删除标签"
+                                    aria-label="删除标签"
+                                    onClick={() => handleDeleteTag(tag.id)}
+                                >
+                                    <Trash2 size={12} />
+                                </button>
+                            )}
+                        </div>
                     ))}
                 </div>
 
@@ -137,6 +196,8 @@ export default function TodoCard() {
                             item={item}
                             onToggleComplete={handleToggleComplete}
                             onEdit={handleEdit}
+                            canDelete={canTodo}
+                            onDelete={handleDeleteItem}
                         />
                     ))}
                 </div>

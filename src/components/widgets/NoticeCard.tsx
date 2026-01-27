@@ -66,8 +66,9 @@ export default function NoticeCard() {
                 <div className="flex-1 space-y-3">
                     {data.map((notice) => (
                         <NoticeItem
-                            key={notice.createTime}
+                            key={notice.id}
                             notice={notice}
+                            onDeleted={refresh}
                         />
                     ))}
                 </div>

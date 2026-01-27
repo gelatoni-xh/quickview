@@ -7,6 +7,13 @@ dist/
 dist-ssr/
 *.local
 
+# TypeScript build artifacts
+*.tsbuildinfo
+
+# Generated declaration files (this repo does not want emitted .d.ts)
+src/**/*.d.ts
+vite.config.d.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

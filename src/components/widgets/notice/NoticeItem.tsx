@@ -9,18 +9,41 @@
  * - 点击查看详情打开模态框
  */
 import { useState } from 'react'
-import type {Notice} from '../../../types/notices.ts'
+import { Trash2 } from 'lucide-react'
+import type { Notice } from '../../../types/notices.ts'
+import { useAuth } from '../../../hooks/useAuth'
+import { PERMISSIONS } from '../../../constants/permissions'
+import { useDeleteNotice } from '../../../hooks/useDeleteNotice'
 import NoticeModal from './NoticeModal'
 
 /** NoticeItem 组件的 Props 类型 */
 interface Props {
     /** 公告数据 */
     notice: Notice
+    onDeleted?: () => void | Promise<void>
 }
 
-export default function NoticeItem({ notice }: Props) {
+export default function NoticeItem({ notice, onDeleted }: Props) {
     // 控制详情弹窗的显示状态
     const [open, setOpen] = useState(false)
+
+    const { hasPermission } = useAuth()
+    const canDelete = hasPermission(PERMISSIONS.NOTICE_CREATE)
+    const { deleteNotice, loading: deleting, error: deleteError } = useDeleteNotice()
+
+    const handleDelete = async () => {
+        if (!canDelete) {
+            return
+        }
+        const ok = window.confirm('确定删除该公告吗？')
+        if (!ok) {
+            return
+        }
+        const success = await deleteNotice(notice.id)
+        if (success) {
+            onDeleted?.()
+        }
+    }
 
     return (
         <div className="border-b pb-2">
@@ -39,13 +62,31 @@ export default function NoticeItem({ notice }: Props) {
                 {notice.content}
             </div>
 
-            {/* 查看详情按钮 */}
-            <button
-                className="text-blue-600 text-xs mt-1"
-                onClick={() => setOpen(true)}
-            >
-                查看详情
-            </button>
+            <div className="flex items-center justify-between mt-1">
+                {/* 查看详情按钮 */}
+                <button
+                    className="text-blue-600 text-xs"
+                    onClick={() => setOpen(true)}
+                >
+                    查看详情
+                </button>
+
+                {canDelete && (
+                    <button
+                        className="p-1 text-gray-400 hover:text-red-600"
+                        title="删除"
+                        aria-label="删除"
+                        disabled={deleting}
+                        onClick={handleDelete}
+                    >
+                        <Trash2 size={14} />
+                    </button>
+                )}
+            </div>
+
+            {deleteError && (
+                <div className="text-xs text-red-500 mt-1">{deleteError}</div>
+            )}
 
             {/* 公告详情弹窗 */}
             {open && (

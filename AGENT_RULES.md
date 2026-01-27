@@ -208,6 +208,14 @@ const res = await fetch(url, { headers })
 const result: ApiResponse = await res.json()
 ```
 
+## 不需要生成 .d.ts
+
+- **本项目不需要**在 `src/` 下生成任何 `*.d.ts`（这些通常是 `tsc` 输出的中间产物）。
+- **禁止**开启会产生声明文件输出的配置（例如 `declaration` / `emitDeclarationOnly`，以及使用 `tsc -b` 触发 project references 输出）。
+- 本项目 `TypeScript` 的用途是：
+  - 类型检查（例如 `tsc --noEmit`）
+  - 配合 Vite 构建前端产物
+
 ### 类型定义
 
 - 所有 API 响应都应定义类型

@@ -4,15 +4,18 @@
  * 展示单个 TODO 项，支持点击切换完成状态和编辑。
  */
 import { Check, Edit2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import type { TodoItem } from '../../../types/todo'
 
 interface Props {
     item: TodoItem
     onToggleComplete: (item: TodoItem) => void
     onEdit: (item: TodoItem) => void
+    canDelete?: boolean
+    onDelete?: (item: TodoItem) => void
 }
 
-export default function TodoItemRow({ item, onToggleComplete, onEdit }: Props) {
+export default function TodoItemRow({ item, onToggleComplete, onEdit, canDelete, onDelete }: Props) {
     return (
         <div className="flex items-center gap-2 py-2 border-b last:border-b-0">
             {/* 完成状态按钮 */}
@@ -43,6 +46,17 @@ export default function TodoItemRow({ item, onToggleComplete, onEdit }: Props) {
             >
                 <Edit2 size={14} />
             </button>
+
+            {canDelete && onDelete && (
+                <button
+                    onClick={() => onDelete(item)}
+                    className="flex-shrink-0 p-1 text-gray-400 hover:text-red-600"
+                    title="删除"
+                    aria-label="删除"
+                >
+                    <Trash2 size={14} />
+                </button>
+            )}
         </div>
     )
 }
