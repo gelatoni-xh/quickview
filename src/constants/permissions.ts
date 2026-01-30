@@ -12,5 +12,7 @@ export const PERMISSIONS = {
     TODO: 'PERM_TODO',
     /** 活动记录权限（用于所有活动记录相关的操作） */
     ACTIVITY: 'PERM_ACTIVITY',
+    /** 比赛权限（用于比赛相关的操作） */
+    MATCH: 'PERM_MATCH',
     USER_PERMISSION_MGMT: 'PERM_USER_PERMISSION_MGMT',
 } as const

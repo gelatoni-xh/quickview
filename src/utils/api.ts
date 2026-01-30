@@ -95,3 +95,28 @@ export async function apiPost<T = unknown>(url: string, body?: ApiPostBody): Pro
     }
     return res.json()
 }
+
+/**
+ * PUT 请求
+ */
+export async function apiPut<T = unknown>(url: string, body?: ApiPostBody): Promise<T> {
+    const res = await apiRequest(url, {
+        method: 'PUT',
+        body: body ? JSON.stringify(body) : undefined,
+    })
+    if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+    }
+    return res.json()
+}
+
+/**
+ * DELETE 请求
+ */
+export async function apiDelete<T = unknown>(url: string): Promise<T> {
+    const res = await apiRequest(url, { method: 'DELETE' })
+    if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+    }
+    return res.json()
+}

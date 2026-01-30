@@ -17,6 +17,7 @@ import Header from './components/layout/Header.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import ActivityLog from './pages/ActivityLog.tsx'
 import UserPermissionMgmt from './pages/UserPermissionMgmt.tsx'
+import _2KGames from './pages/2KGames.tsx'
 
 function AppContent() {
     // 控制侧边栏的显示/隐藏状态
@@ -35,6 +36,7 @@ function AppContent() {
                         <Route path="/" element={<Navigate to="/dashboard" replace />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/activity-log" element={<ActivityLog />} />
+                        <Route path="/2k-games" element={<_2KGames />} />
                         <Route path="/user-permission-mgmt" element={<UserPermissionMgmt />} />
                     </Routes>
                 </div>

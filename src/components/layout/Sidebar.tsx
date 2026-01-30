@@ -62,6 +62,15 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                         Activity Log
                     </Link>
                 )}
+                {hasPermission(PERMISSIONS.MATCH) && (
+                    <Link
+                        to="/2k-games"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        2K Games
+                    </Link>
+                )}
                 {hasPermission(PERMISSIONS.USER_PERMISSION_MGMT) && (
                     <Link
                         to="/user-permission-mgmt"
