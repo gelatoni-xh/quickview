@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../../hooks/useAuth'
-import { createMatchGame, getMatchGameDetail, updateMatchGame } from '../../services/matchGameApi'
+import { useAuth } from '../../../hooks/useAuth.ts'
+import { createMatchGame, getMatchGameDetail, updateMatchGame } from '../../../services/matchGameApi.ts'
 import type {
     MatchGameDTO,
     MatchPlayerStatsDTO,
     MatchTeamStatsDTO,
-} from '../../types/matchGame'
+} from '../../../types/matchGame.ts'
 import {
     ensureNumber,
     normalizeLocalDateTime,
     toInputDatetimeLocalValue,
-} from '../../utils/matchGameFormat'
-import { useMatchGameBaseData } from '../../hooks/useMatchGameBaseData'
-import AutoCompleteInput from '../../components/common/AutoCompleteInput'
+} from '../../../utils/matchGameFormat.ts'
+import { useMatchGameBaseData } from '../../../hooks/useMatchGameBaseData.ts'
+import AutoCompleteInput from '../../common/AutoCompleteInput.tsx'
 
 type GameEditorMode = 'create' | 'edit'
 

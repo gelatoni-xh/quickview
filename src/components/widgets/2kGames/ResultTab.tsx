@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import type { MatchGameDTO } from '../../types/matchGame'
-import { calcWinnerText, ensureNumber, formatDatetime } from '../../utils/matchGameFormat'
+import type { MatchGameDTO } from '../../../types/matchGame.ts'
+import { calcWinnerText, ensureNumber, formatDatetime } from '../../../utils/matchGameFormat.ts'
 
 export default function ResultTab(props: {
     season: string

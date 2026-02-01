@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { getMatchGameDetail } from '../../services/matchGameApi'
-import type { MatchGameDetailDTO } from '../../types/matchGame'
-import { formatDatetime } from '../../utils/matchGameFormat'
+import { getMatchGameDetail } from '../../../services/matchGameApi.ts'
+import type { MatchGameDetailDTO } from '../../../types/matchGame.ts'
+import { formatDatetime } from '../../../utils/matchGameFormat.ts'
 
 export default function GameDetailModal(props: {
     gameId: number

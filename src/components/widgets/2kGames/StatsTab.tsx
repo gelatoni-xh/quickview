@@ -1,5 +1,5 @@
-import type { MatchGameStatsDTO, MatchGameStatsDimension } from '../../types/matchGame'
-import { formatPct01, metricLabel } from '../../utils/matchGameFormat'
+import type { MatchGameStatsDTO, MatchGameStatsDimension } from '../../../types/matchGame.ts'
+import { formatPct01, metricLabel } from '../../../utils/matchGameFormat.ts'
 
 export default function StatsTab(props: {
     statsSeason: string
@@ -87,7 +87,7 @@ export default function StatsTab(props: {
                     const statsData = props.statsData
 
                     return (
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                             {(Array.isArray(statsData.leaderboards) ? statsData.leaderboards : []).map((lb) => {
                         const isPct = lb.metric === 'FG_PCT' || lb.metric === 'THREE_PCT'
 
