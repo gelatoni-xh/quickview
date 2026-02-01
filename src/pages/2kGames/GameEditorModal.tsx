@@ -11,7 +11,7 @@ import {
     normalizeLocalDateTime,
     toInputDatetimeLocalValue,
 } from '../../utils/matchGameFormat'
-import { users, players } from '../../data/players'
+import { useMatchGameBaseData } from '../../hooks/useMatchGameBaseData'
 
 type GameEditorMode = 'create' | 'edit'
 
@@ -35,6 +35,8 @@ export default function GameEditorModal(props: {
     onSuccess: () => void
 }) {
     const { userInfo } = useAuth()
+
+    const { data: baseData, loading: baseDataLoading } = useMatchGameBaseData()
 
     const [tab, setTab] = useState<EditorTabKey>('base')
 
@@ -272,13 +274,28 @@ export default function GameEditorModal(props: {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label className="block text-sm text-gray-600 mb-1">赛季</label>
-                            <input
-                                className="w-full border rounded px-3 py-2 text-sm"
-                                value={season}
-                                onChange={(e) => setSeason(e.target.value)}
-                                disabled={loading}
-                                placeholder="例如 S1 / 2026Q1"
-                            />
+                            <div className="flex gap-1">
+                                <select
+                                    className="w-full border rounded px-3 py-2 text-sm"
+                                    value={season}
+                                    onChange={(e) => setSeason(e.target.value)}
+                                    disabled={loading || baseDataLoading}
+                                >
+                                    <option value="">选择赛季</option>
+                                    {(baseData?.seasons || []).map((s) => (
+                                        <option key={s} value={s}>
+                                            {s}
+                                        </option>
+                                    ))}
+                                </select>
+                                <input
+                                    className="w-full border rounded px-3 py-2 text-sm"
+                                    value={season}
+                                    onChange={(e) => setSeason(e.target.value)}
+                                    disabled={loading}
+                                    placeholder="或手动输入"
+                                />
+                            </div>
                         </div>
 
                         <div>
@@ -745,19 +762,18 @@ export default function GameEditorModal(props: {
                                                         className="border rounded px-2 py-1 text-sm w-28"
                                                         value={row.userName ?? ''}
                                                         onChange={(e) => {
-                                                            const selectedUser = users.find(u => u.username === e.target.value)
                                                             setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? {
                                                                 ...r,
                                                                 userName: e.target.value,
-                                                                playerName: selectedUser ? selectedUser.username : r.playerName,
+                                                                playerName: r.playerName,
                                                             } : r))
                                                         }}
-                                                        disabled={loading}
+                                                        disabled={loading || baseDataLoading || row.teamType !== 1}
                                                     >
                                                         <option value="">选择用户</option>
-                                                        {users.map(user => (
-                                                            <option key={user.id} value={user.username}>
-                                                                {user.username}
+                                                        {(baseData?.myUserNames || []).map((u) => (
+                                                            <option key={u} value={u}>
+                                                                {u}
                                                             </option>
                                                         ))}
                                                     </select>
@@ -776,12 +792,15 @@ export default function GameEditorModal(props: {
                                                         className="border rounded px-2 py-1 text-sm w-32"
                                                         value={row.playerName ?? ''}
                                                         onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, playerName: e.target.value } : r))}
-                                                        disabled={loading}
+                                                        disabled={loading || baseDataLoading}
                                                     >
                                                         <option value="">选择球员</option>
-                                                        {players.map(player => (
-                                                            <option key={player.id} value={player.name}>
-                                                                {player.name}
+                                                        {(row.teamType === 2
+                                                            ? (baseData?.opponentPlayerNames ?? [])
+                                                            : (baseData?.myPlayerNames ?? [])
+                                                        ).map((p) => (
+                                                            <option key={p} value={p}>
+                                                                {p}
                                                             </option>
                                                         ))}
                                                     </select>
