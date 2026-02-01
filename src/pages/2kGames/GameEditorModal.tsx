@@ -12,6 +12,7 @@ import {
     toInputDatetimeLocalValue,
 } from '../../utils/matchGameFormat'
 import { useMatchGameBaseData } from '../../hooks/useMatchGameBaseData'
+import AutoCompleteInput from '../../components/common/AutoCompleteInput'
 
 type GameEditorMode = 'create' | 'edit'
 
@@ -757,61 +758,33 @@ export default function GameEditorModal(props: {
                                                 </select>
                                             </td>
                                             <td className="px-3 py-2">
-                                                <div className="flex gap-1">
-                                                    <select
-                                                        className="border rounded px-2 py-1 text-sm w-28"
-                                                        value={row.userName ?? ''}
-                                                        onChange={(e) => {
-                                                            setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? {
-                                                                ...r,
-                                                                userName: e.target.value,
-                                                                playerName: r.playerName,
-                                                            } : r))
-                                                        }}
-                                                        disabled={loading || baseDataLoading || row.teamType !== 1}
-                                                    >
-                                                        <option value="">选择用户</option>
-                                                        {(baseData?.myUserNames || []).map((u) => (
-                                                            <option key={u} value={u}>
-                                                                {u}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <input
-                                                        className="border rounded px-2 py-1 text-sm w-28"
-                                                        value={row.userName ?? ''}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, userName: e.target.value } : r))}
-                                                        placeholder="或手动输入"
-                                                        disabled={loading}
-                                                    />
-                                                </div>
+                                                <AutoCompleteInput
+                                                    value={row.userName ?? ''}
+                                                    onChange={(value) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, userName: value } : r))}
+                                                    options={baseData?.myUserNames || []}
+                                                    placeholder="选择用户"
+                                                    disabled={loading || baseDataLoading || row.teamType !== 1}
+                                                    className="w-32"
+                                                    inputClassName="w-full"
+                                                    dropdownPosition="top"
+                                                    usePortal={true}
+                                                />
                                             </td>
                                             <td className="px-3 py-2">
-                                                <div className="flex gap-1">
-                                                    <select
-                                                        className="border rounded px-2 py-1 text-sm w-32"
-                                                        value={row.playerName ?? ''}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, playerName: e.target.value } : r))}
-                                                        disabled={loading || baseDataLoading}
-                                                    >
-                                                        <option value="">选择球员</option>
-                                                        {(row.teamType === 2
-                                                            ? (baseData?.opponentPlayerNames ?? [])
-                                                            : (baseData?.myPlayerNames ?? [])
-                                                        ).map((p) => (
-                                                            <option key={p} value={p}>
-                                                                {p}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                    <input
-                                                        className="border rounded px-2 py-1 text-sm w-32"
-                                                        value={row.playerName ?? ''}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, playerName: e.target.value } : r))}
-                                                        placeholder="或手动输入"
-                                                        disabled={loading}
-                                                    />
-                                                </div>
+                                                <AutoCompleteInput
+                                                    value={row.playerName ?? ''}
+                                                    onChange={(value) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, playerName: value } : r))}
+                                                    options={row.teamType === 2
+                                                        ? (baseData?.opponentPlayerNames ?? [])
+                                                        : (baseData?.myPlayerNames ?? [])
+                                                    }
+                                                    placeholder="选择球员"
+                                                    disabled={loading || baseDataLoading}
+                                                    className="w-32"
+                                                    inputClassName="w-full"
+                                                    dropdownPosition="top"
+                                                    usePortal={true}
+                                                />
                                             </td>
                                             <td className="px-3 py-2">
                                                 <input
