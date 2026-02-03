@@ -131,11 +131,15 @@ export default function AutoCompleteInput({
                 value={value}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                onFocus={() => setIsOpen(true)}
+                onFocus={() => {
+                    if (!disabled) {
+                        setIsOpen(true)
+                    }
+                }}
                 placeholder={placeholder}
                 disabled={disabled}
                 className={`border rounded px-2 py-1 text-sm w-full ${inputClassName} ${
-                    disabled ? 'bg-gray-100 cursor-not-allowed' : ''
+                    disabled ? 'bg-gray-100 cursor-not-allowed text-gray-400' : 'cursor-text'
                 }`}
             />
             
@@ -149,7 +153,12 @@ export default function AutoCompleteInput({
                             {filteredOptions.map((option, index) => (
                                 <div
                                     key={option}
-                                    onClick={() => handleSelect(option)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        console.log('Portal option clicked:', option);
+                                        handleSelect(option);
+                                    }}
                                     onMouseEnter={() => setFocusedIndex(index)}
                                     className={`px-3 py-2 text-sm cursor-pointer ${
                                         index === focusedIndex 

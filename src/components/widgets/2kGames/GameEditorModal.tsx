@@ -12,7 +12,7 @@ import {
     toInputDatetimeLocalValue,
 } from '../../../utils/matchGameFormat.ts'
 import { useMatchGameBaseData } from '../../../hooks/useMatchGameBaseData.ts'
-import AutoCompleteInput from '../../common/AutoCompleteInput.tsx'
+import SimpleAutoComplete from '../../common/SimpleAutoComplete.tsx'
 
 type GameEditorMode = 'create' | 'edit'
 
@@ -742,7 +742,7 @@ export default function GameEditorModal(props: {
                                 </thead>
                                 <tbody>
                                     {playerStatsList.map((row, idx) => (
-                                        <tr key={row.id || idx} className="border-t">
+                                        <tr key={`${row.id || 'new'}-${idx}`} className="border-t">
                                             <td className="px-3 py-2">
                                                 <select
                                                     className="border rounded px-2 py-1 text-sm"
@@ -758,22 +758,36 @@ export default function GameEditorModal(props: {
                                                 </select>
                                             </td>
                                             <td className="px-3 py-2">
-                                                <AutoCompleteInput
+                                                <SimpleAutoComplete
                                                     value={row.userName ?? ''}
-                                                    onChange={(value) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, userName: value } : r))}
+                                                    onChange={(value) => {
+                                                        console.log('UserName changed to:', value);
+                                                        setPlayerStatsList((prev) => 
+                                                            prev.map((r, i) => i === idx ? { ...r, userName: value } : r)
+                                                        );
+                                                    }}
                                                     options={baseData?.myUserNames || []}
                                                     placeholder="选择用户"
                                                     disabled={loading || baseDataLoading || row.teamType !== 1}
                                                     className="w-32"
-                                                    inputClassName="w-full"
-                                                    dropdownPosition="top"
-                                                    usePortal={true}
                                                 />
+                                                {/* 状态提示 */}
+                                                {baseDataLoading && (
+                                                    <div className="text-xs text-yellow-600 mt-1">数据加载中...</div>
+                                                )}
+                                                {row.teamType !== 1 && (
+                                                    <div className="text-xs text-gray-500 mt-1">仅我方队伍可选择用户</div>
+                                                )}
                                             </td>
                                             <td className="px-3 py-2">
-                                                <AutoCompleteInput
+                                                <SimpleAutoComplete
                                                     value={row.playerName ?? ''}
-                                                    onChange={(value) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, playerName: value } : r))}
+                                                    onChange={(value) => {
+                                                        console.log('PlayerName changed to:', value);
+                                                        setPlayerStatsList((prev) => 
+                                                            prev.map((r, i) => i === idx ? { ...r, playerName: value } : r)
+                                                        );
+                                                    }}
                                                     options={row.teamType === 2
                                                         ? (baseData?.opponentPlayerNames ?? [])
                                                         : (baseData?.myPlayerNames ?? [])
@@ -781,17 +795,21 @@ export default function GameEditorModal(props: {
                                                     placeholder="选择球员"
                                                     disabled={loading || baseDataLoading}
                                                     className="w-32"
-                                                    inputClassName="w-full"
-                                                    dropdownPosition="top"
-                                                    usePortal={true}
                                                 />
+                                                {/* 状态提示 */}
+                                                {baseDataLoading && (
+                                                    <div className="text-xs text-yellow-600 mt-1">数据加载中...</div>
+                                                )}
                                             </td>
                                             <td className="px-3 py-2">
                                                 <input
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.score ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, score: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, score: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -800,7 +818,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.assist ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, assist: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, assist: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -809,7 +830,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.rebound ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, rebound: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, rebound: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -818,7 +842,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.steal ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, steal: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, steal: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -827,7 +854,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.block ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, block: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, block: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -836,7 +866,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.turnover ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, turnover: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, turnover: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -845,7 +878,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.dunk ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, dunk: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, dunk: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -854,7 +890,10 @@ export default function GameEditorModal(props: {
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
                                                     value={row.midCount ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, midCount: ensureNumber(e.target.value, 0) } : r))}
+                                                    onChange={(e) => {
+                                                        const v = ensureNumber(e.target.value, 0)
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, midCount: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
@@ -864,7 +903,10 @@ export default function GameEditorModal(props: {
                                                         className="border rounded px-2 py-1 w-16"
                                                         type="number"
                                                         value={row.fgMade ?? 0}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, fgMade: ensureNumber(e.target.value, 0) } : r))}
+                                                        onChange={(e) => {
+                                                            const v = ensureNumber(e.target.value, 0)
+                                                            setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, fgMade: v } : r))
+                                                        }}
                                                         disabled={loading}
                                                     />
                                                     <span className="text-gray-400">/</span>
@@ -872,7 +914,10 @@ export default function GameEditorModal(props: {
                                                         className="border rounded px-2 py-1 w-16"
                                                         type="number"
                                                         value={row.fgAttempt ?? 0}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, fgAttempt: ensureNumber(e.target.value, 0) } : r))}
+                                                        onChange={(e) => {
+                                                            const v = ensureNumber(e.target.value, 0)
+                                                            setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, fgAttempt: v } : r))
+                                                        }}
                                                         disabled={loading}
                                                     />
                                                 </div>
@@ -883,7 +928,10 @@ export default function GameEditorModal(props: {
                                                         className="border rounded px-2 py-1 w-16"
                                                         type="number"
                                                         value={row.threeMade ?? 0}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, threeMade: ensureNumber(e.target.value, 0) } : r))}
+                                                        onChange={(e) => {
+                                                            const v = ensureNumber(e.target.value, 0)
+                                                            setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, threeMade: v } : r))
+                                                        }}
                                                         disabled={loading}
                                                     />
                                                     <span className="text-gray-400">/</span>
@@ -891,7 +939,10 @@ export default function GameEditorModal(props: {
                                                         className="border rounded px-2 py-1 w-16"
                                                         type="number"
                                                         value={row.threeAttempt ?? 0}
-                                                        onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, threeAttempt: ensureNumber(e.target.value, 0) } : r))}
+                                                        onChange={(e) => {
+                                                            const v = ensureNumber(e.target.value, 0)
+                                                            setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, threeAttempt: v } : r))
+                                                        }}
                                                         disabled={loading}
                                                     />
                                                 </div>
@@ -900,31 +951,38 @@ export default function GameEditorModal(props: {
                                                 <input
                                                     className="border rounded px-2 py-1 w-20"
                                                     type="number"
-                                                    value={row.rating ?? 0}
-                                                    onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, rating: parseFloat(e.target.value) || 0 } : r))}
                                                     step="0.1"
+                                                    value={row.rating ?? 0.0}
+                                                    onChange={(e) => {
+                                                        const v = parseFloat(e.target.value) || 0
+                                                        setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, rating: v } : r))
+                                                    }}
                                                     disabled={loading}
                                                 />
                                             </td>
                                             <td className="px-3 py-2">
-                                                <div className="flex items-center gap-2">
-                                                    <label className="inline-flex items-center gap-1">
+                                                <div className="flex items-center gap-1">
+                                                    <label className="flex items-center gap-1">
                                                         <input
                                                             type="checkbox"
                                                             checked={!!row.isMvp}
-                                                            onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, isMvp: e.target.checked } : r))}
+                                                            onChange={(e) => {
+                                                                setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, isMvp: e.target.checked } : r))
+                                                            }}
                                                             disabled={loading}
                                                         />
-                                                        <span className="text-xs">MVP</span>
+                                                        MVP
                                                     </label>
-                                                    <label className="inline-flex items-center gap-1">
+                                                    <label className="flex items-center gap-1">
                                                         <input
                                                             type="checkbox"
                                                             checked={!!row.isSvp}
-                                                            onChange={(e) => setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, isSvp: e.target.checked } : r))}
+                                                            onChange={(e) => {
+                                                                setPlayerStatsList((prev) => prev.map((r, i) => i === idx ? { ...r, isSvp: e.target.checked } : r))
+                                                            }}
                                                             disabled={loading}
                                                         />
-                                                        <span className="text-xs">SVP</span>
+                                                        SVP
                                                     </label>
                                                 </div>
                                             </td>
@@ -941,7 +999,7 @@ export default function GameEditorModal(props: {
                                     ))}
                                     {playerStatsList.length === 0 && (
                                         <tr className="border-t">
-                                            <td className="px-3 py-6 text-center text-gray-400" colSpan={14}>暂无球员统计</td>
+                                            <td className="px-3 py-6 text-center text-gray-400" colSpan={16}>暂无球员统计</td>
                                         </tr>
                                     )}
                                 </tbody>
