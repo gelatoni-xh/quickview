@@ -75,27 +75,15 @@ export default function StatsTab(props: {
                         >
                             生成统计
                         </button>
-
-                        <button
-                            onClick={props.onReset}
-                            className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
-                            disabled={props.statsLoading}
-                        >
-                            重置
-                        </button>
-
-                        <button
-                            onClick={props.onClearCache}
-                            className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
-                            disabled={props.statsLoading}
-                        >
-                            清除缓存
-                        </button>
                     </div>
 
-                    <div className="text-xs text-gray-500">
-                        仅统计我方数据（team_type=我方）
-                    </div>
+                    <button
+                        onClick={props.onClearCache}
+                        className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
+                        disabled={props.statsLoading}
+                    >
+                        清除缓存
+                    </button>
                 </div>
             </div>
 
