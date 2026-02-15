@@ -15,6 +15,7 @@ export default function StatsTab(props: {
     onStatsDimensionChange: (v: MatchGameStatsDimension) => void
     onFetchStats: () => void
     onReset: () => void
+    onClearCache: () => void
 }) {
     const availableDates = props.statsSeason && props.baseData?.matchDatesBySeason
         ? props.baseData.matchDatesBySeason[props.statsSeason] || []
@@ -81,6 +82,14 @@ export default function StatsTab(props: {
                             disabled={props.statsLoading}
                         >
                             重置
+                        </button>
+
+                        <button
+                            onClick={props.onClearCache}
+                            className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
+                            disabled={props.statsLoading}
+                        >
+                            清除缓存
                         </button>
                     </div>
 

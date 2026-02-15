@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { deleteMatchGame, getMatchGamePage, getMatchGameStats } from '../services/matchGameApi'
+import { deleteMatchGame, getMatchGamePage, getMatchGameStats, clearMatchGameCache } from '../services/matchGameApi'
 import type { MatchGameDTO, MatchGameStatsDTO, MatchGameStatsDimension } from '../types/matchGame'
 import { ensureNumber } from '../utils/matchGameFormat'
 import { useMatchGameBaseData } from '../hooks/useMatchGameBaseData'
@@ -162,6 +162,19 @@ export default function _2KGames() {
         }
     }
 
+    const handleClearCache = async () => {
+        try {
+            setStatsLoading(true)
+            await clearMatchGameCache()
+            setStatsData(null)
+            setStatsError(null)
+        } catch (err) {
+            setStatsError(err instanceof Error ? err.message : String(err))
+        } finally {
+            setStatsLoading(false)
+        }
+    }
+
     return (
         <main className="flex-1 p-6 overflow-auto bg-gradient-to-br from-slate-50 via-white to-sky-50">
             <div className="mb-6">
@@ -245,6 +258,7 @@ export default function _2KGames() {
                         setStatsData(null)
                         setStatsError(null)
                     }}
+                    onClearCache={handleClearCache}
                 />
             )}
 

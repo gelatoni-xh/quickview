@@ -64,3 +64,7 @@ export async function deleteMatchGame(gameId: number) {
 export async function getMatchGameStats(req: MatchGameStatsRequest) {
     return apiPost<MatchGameStatsResponse>('/api/match-game/stats', req as unknown as ApiPostBody)
 }
+
+export async function clearMatchGameCache() {
+    return apiPost<boolean>('/api/match-game/clear-cache', {})
+}
