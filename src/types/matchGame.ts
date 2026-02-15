@@ -98,6 +98,7 @@ export interface MatchGameStatsRankItem {
 
 export interface MatchGameStatsLeaderboard {
     metric: MatchGameStatsMetric
+    metricDesc: string
     items: MatchGameStatsRankItem[]
 }
 
