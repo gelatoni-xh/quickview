@@ -116,6 +116,8 @@ export default function StatsTab(props: {
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                             {(Array.isArray(statsData.leaderboards) ? statsData.leaderboards : []).map((lb) => {
                         const isPct = lb.metric === 'FG_PCT' || lb.metric === 'THREE_PCT'
+                        const isAvgPct = lb.metric === 'FG_PCT_AVG' || lb.metric === 'THREE_PCT_AVG'
+                        const isAvg = lb.metric.endsWith('_AVG')
 
                         return (
                             <div key={lb.metric} className="bg-white rounded-xl border shadow-sm overflow-hidden">
@@ -140,6 +142,11 @@ export default function StatsTab(props: {
                                                         <th className="text-right px-4 py-2 font-medium">命中/出手</th>
                                                         <th className="text-right px-4 py-2 font-medium">命中率</th>
                                                     </>
+                                                ) : isAvgPct ? (
+                                                    <>
+                                                        <th className="text-right px-4 py-2 font-medium">场均命中/出手</th>
+                                                        <th className="text-right px-4 py-2 font-medium">命中率</th>
+                                                    </>
                                                 ) : (
                                                     <th className="text-right px-4 py-2 font-medium">数值</th>
                                                 )}
@@ -157,6 +164,15 @@ export default function StatsTab(props: {
                                                             </td>
                                                             <td className="px-4 py-2 text-right">{formatPct01(it.rate)}</td>
                                                         </>
+                                                    ) : isAvgPct ? (
+                                                        <>
+                                                            <td className="px-4 py-2 text-right">
+                                                                {(it.made ?? 0).toFixed(1)} / {(it.attempt ?? 0).toFixed(1)}
+                                                            </td>
+                                                            <td className="px-4 py-2 text-right">{formatPct01(it.rate)}</td>
+                                                        </>
+                                                    ) : isAvg ? (
+                                                        <td className="px-4 py-2 text-right">{(it.avg ?? 0).toFixed(1)}</td>
                                                     ) : (
                                                         <td className="px-4 py-2 text-right">{it.value ?? 0}</td>
                                                     )}
@@ -167,7 +183,7 @@ export default function StatsTab(props: {
                                                 <tr className="border-t">
                                                     <td
                                                         className="px-4 py-8 text-center text-gray-400"
-                                                        colSpan={isPct ? 4 : 3}
+                                                        colSpan={isPct || isAvgPct ? 4 : 3}
                                                     >
                                                         暂无数据
                                                     </td>

@@ -5,19 +5,33 @@ export type MatchGameStatsDimension = 'PLAYER' | 'USER'
 export type MatchGameStatsMetric =
     | 'APPEARANCES'
     | 'SCORE'
+    | 'SCORE_AVG'
     | 'REBOUND'
+    | 'REBOUND_AVG'
     | 'ASSIST'
+    | 'ASSIST_AVG'
     | 'STEAL'
+    | 'STEAL_AVG'
     | 'BLOCK'
+    | 'BLOCK_AVG'
     | 'FG_ATTEMPT'
+    | 'FG_ATTEMPT_AVG'
     | 'FG_MADE'
+    | 'FG_MADE_AVG'
     | 'FG_PCT'
+    | 'FG_PCT_AVG'
     | 'THREE_ATTEMPT'
+    | 'THREE_ATTEMPT_AVG'
     | 'THREE_MADE'
+    | 'THREE_MADE_AVG'
     | 'THREE_PCT'
+    | 'THREE_PCT_AVG'
     | 'MVP'
+    | 'MVP_AVG'
     | 'SVP'
+    | 'SVP_AVG'
     | 'TURNOVER'
+    | 'TURNOVER_AVG'
 
 export interface MatchGameDTO {
     id: number
@@ -91,6 +105,7 @@ export interface MatchGameDetailDTO {
 export interface MatchGameStatsRankItem {
     name: string
     value?: number
+    avg?: number
     made?: number
     attempt?: number
     rate?: number
