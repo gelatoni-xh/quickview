@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth'
 import { deleteMatchGame, getMatchGamePage, getMatchGameStats } from '../services/matchGameApi'
 import type { MatchGameDTO, MatchGameStatsDTO, MatchGameStatsDimension } from '../types/matchGame'
 import { ensureNumber } from '../utils/matchGameFormat'
+import { useMatchGameBaseData } from '../hooks/useMatchGameBaseData'
 import GameDetailModal from '../components/widgets/2kGames/GameDetailModal.tsx'
 import GameEditorModal from '../components/widgets/2kGames/GameEditorModal.tsx'
 import ResultTab from '../components/widgets/2kGames/ResultTab.tsx'
@@ -14,6 +15,7 @@ type GameEditorMode = 'create' | 'edit'
 
 export default function _2KGames() {
     const { userInfo } = useAuth()
+    const { data: baseData } = useMatchGameBaseData()
 
     const [tab, setTab] = useState<TabKey>('result')
 
@@ -32,10 +34,22 @@ export default function _2KGames() {
     const [detailGameId, setDetailGameId] = useState<number | null>(null)
 
     const [statsSeason, setStatsSeason] = useState('')
+    const [statsMatchDate, setStatsMatchDate] = useState('')
     const [statsDimension, setStatsDimension] = useState<MatchGameStatsDimension>('PLAYER')
     const [statsLoading, setStatsLoading] = useState(false)
     const [statsError, setStatsError] = useState<string | null>(null)
     const [statsData, setStatsData] = useState<MatchGameStatsDTO | null>(null)
+
+    useEffect(() => {
+        if (baseData?.seasons && baseData.seasons.length > 0) {
+            const latestSeason = baseData.seasons[0]
+            setStatsSeason(latestSeason)
+            const dates = baseData.matchDatesBySeason[latestSeason]
+            if (dates && dates.length > 0) {
+                setStatsMatchDate(dates[0])
+            }
+        }
+    }, [baseData])
 
     const canNextPage = useMemo(() => data.length === pageSize, [data.length, pageSize])
 
@@ -128,6 +142,8 @@ export default function _2KGames() {
 
             const res = await getMatchGameStats({
                 season: statsSeason.trim() ? statsSeason.trim() : null,
+                matchDate: statsMatchDate.trim() ? statsMatchDate.trim() : null,
+                excludeRobot: true,
                 dimension: statsDimension,
             })
 
@@ -195,16 +211,36 @@ export default function _2KGames() {
 
             {tab === 'stats' && (
                 <StatsTab
+                    baseData={baseData}
                     statsSeason={statsSeason}
+                    statsMatchDate={statsMatchDate}
                     statsDimension={statsDimension}
                     statsLoading={statsLoading}
                     statsError={statsError}
                     statsData={statsData}
-                    onStatsSeasonChange={setStatsSeason}
+                    onStatsSeasonChange={(season) => {
+                        setStatsSeason(season)
+                        if (season && baseData?.matchDatesBySeason[season]) {
+                            setStatsMatchDate(baseData.matchDatesBySeason[season][0] || '')
+                        } else {
+                            setStatsMatchDate('')
+                        }
+                    }}
+                    onStatsMatchDateChange={setStatsMatchDate}
                     onStatsDimensionChange={setStatsDimension}
                     onFetchStats={fetchStats}
                     onReset={() => {
-                        setStatsSeason('')
+                        if (baseData?.seasons && baseData.seasons.length > 0) {
+                            const latestSeason = baseData.seasons[0]
+                            setStatsSeason(latestSeason)
+                            const dates = baseData.matchDatesBySeason[latestSeason]
+                            if (dates && dates.length > 0) {
+                                setStatsMatchDate(dates[0])
+                            }
+                        } else {
+                            setStatsSeason('')
+                            setStatsMatchDate('')
+                        }
                         setStatsDimension('PLAYER')
                         setStatsData(null)
                         setStatsError(null)

@@ -36,6 +36,8 @@ export interface MatchGameUpsertRequest {
 
 export interface MatchGameStatsRequest {
     season: string | null
+    matchDate: string | null
+    excludeRobot: boolean
     dimension: MatchGameStatsDimension
 }
 

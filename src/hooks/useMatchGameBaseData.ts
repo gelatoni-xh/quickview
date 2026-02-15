@@ -7,6 +7,7 @@ export interface MatchGameBaseDataDTO {
     myPlayerNames: string[]
     opponentPlayerNames: string[]
     myUserNames: string[]
+    matchDatesBySeason: Record<string, string[]>
 }
 
 export function useMatchGameBaseData() {

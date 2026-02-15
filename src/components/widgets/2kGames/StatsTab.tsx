@@ -1,17 +1,24 @@
 import type { MatchGameStatsDTO, MatchGameStatsDimension } from '../../../types/matchGame.ts'
+import type { MatchGameBaseDataDTO } from '../../../hooks/useMatchGameBaseData'
 import { formatPct01, metricLabel } from '../../../utils/matchGameFormat.ts'
 
 export default function StatsTab(props: {
+    baseData: MatchGameBaseDataDTO | null
     statsSeason: string
+    statsMatchDate: string
     statsDimension: MatchGameStatsDimension
     statsLoading: boolean
     statsError: string | null
     statsData: MatchGameStatsDTO | null
     onStatsSeasonChange: (v: string) => void
+    onStatsMatchDateChange: (v: string) => void
     onStatsDimensionChange: (v: MatchGameStatsDimension) => void
     onFetchStats: () => void
     onReset: () => void
 }) {
+    const availableDates = props.statsSeason && props.baseData?.matchDatesBySeason
+        ? props.baseData.matchDatesBySeason[props.statsSeason] || []
+        : []
     return (
         <>
             <div className="bg-white rounded-xl border shadow-sm mb-4">
@@ -19,13 +26,32 @@ export default function StatsTab(props: {
                     <div className="flex flex-col md:flex-row gap-3 md:items-end">
                         <div>
                             <div className="text-sm text-gray-600 mb-1">赛季筛选</div>
-                            <input
-                                className="border rounded px-3 py-2 text-sm w-60"
+                            <select
+                                className="border rounded px-3 py-2 text-sm w-40"
                                 value={props.statsSeason}
                                 onChange={(e) => props.onStatsSeasonChange(e.target.value)}
-                                placeholder="例如 S1 / 2026Q1；留空=全赛季"
                                 disabled={props.statsLoading}
-                            />
+                            >
+                                <option value="">全赛季</option>
+                                {props.baseData?.seasons.map((s) => (
+                                    <option key={s} value={s}>{s}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <div className="text-sm text-gray-600 mb-1">日期筛选</div>
+                            <select
+                                className="border rounded px-3 py-2 text-sm w-40"
+                                value={props.statsMatchDate}
+                                onChange={(e) => props.onStatsMatchDateChange(e.target.value)}
+                                disabled={props.statsLoading || !props.statsSeason}
+                            >
+                                <option value="">全部日期</option>
+                                {availableDates.map((d) => (
+                                    <option key={d} value={d}>{d}</option>
+                                ))}
+                            </select>
                         </div>
 
                         <div>
