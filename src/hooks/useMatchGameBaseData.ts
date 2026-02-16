@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { apiGet } from '../utils/api'
 import type { BaseResponse } from '../types/rbac'
+import type { MatchGameStatsMetricConfig } from '../types/matchGame'
 
 export interface MatchGameBaseDataDTO {
     seasons: string[]
@@ -8,6 +9,7 @@ export interface MatchGameBaseDataDTO {
     opponentPlayerNames: string[]
     myUserNames: string[]
     matchDatesBySeason: Record<string, string[]>
+    metricConfigs: MatchGameStatsMetricConfig[]
 }
 
 export function useMatchGameBaseData() {

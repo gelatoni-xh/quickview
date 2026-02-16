@@ -1,6 +1,7 @@
 import { apiDelete, apiGet, apiPost, apiPut } from '../utils/api'
 import type { ApiPostBody } from '../utils/api'
 import type {
+    MatchGameBaseDataResponse,
     MatchGameCreateResponse,
     MatchGameDeleteResponse,
     MatchGameDetailResponse,
@@ -67,4 +68,8 @@ export async function getMatchGameStats(req: MatchGameStatsRequest) {
 
 export async function clearMatchGameCache() {
     return apiPost<boolean>('/api/match-game/clear-cache', {})
+}
+
+export async function getMatchGameBaseData() {
+    return apiGet<MatchGameBaseDataResponse>('/api/match-game/base-data')
 }

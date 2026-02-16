@@ -3,6 +3,22 @@ import type { BaseResponse } from './rbac'
 export type MatchGameStatsDimension = 'PLAYER' | 'USER'
 export type MatchGameStatsMetric = string
 
+export interface MatchGameStatsMetricConfig {
+    metric: MatchGameStatsMetric
+    desc: string
+    defaultVisibleForPlayer: boolean
+    defaultVisibleForUser: boolean
+}
+
+export interface MatchGameBaseDataDTO {
+    seasons: string[]
+    myPlayerNames: string[]
+    opponentPlayerNames: string[]
+    myUserNames: string[]
+    matchDatesBySeason: Record<string, string[]>
+    metricConfigs: MatchGameStatsMetricConfig[]
+}
+
 export interface MatchGameDTO {
     id: number
     season: string
@@ -99,3 +115,4 @@ export type MatchGameUpdateResponse = BaseResponse<boolean>
 export type MatchGameDeleteResponse = BaseResponse<boolean>
 export type MatchGameDetailResponse = BaseResponse<MatchGameDetailDTO>
 export type MatchGameStatsResponse = BaseResponse<MatchGameStatsDTO>
+export type MatchGameBaseDataResponse = BaseResponse<MatchGameBaseDataDTO>

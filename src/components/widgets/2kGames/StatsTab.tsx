@@ -1,6 +1,8 @@
+import { useState, useEffect, useMemo } from 'react'
 import type { MatchGameStatsDTO, MatchGameStatsDimension } from '../../../types/matchGame.ts'
 import type { MatchGameBaseDataDTO } from '../../../hooks/useMatchGameBaseData'
 import { formatPct01 } from '../../../utils/matchGameFormat.ts'
+import MetricConfigModal from './MetricConfigModal.tsx'
 
 export default function StatsTab(props: {
     baseData: MatchGameBaseDataDTO | null
@@ -17,9 +19,30 @@ export default function StatsTab(props: {
     onReset: () => void
     onClearCache: () => void
 }) {
+    const [configModalOpen, setConfigModalOpen] = useState(false)
+    const [visibleMetrics, setVisibleMetrics] = useState<Set<string>>(new Set())
+
+    const defaultVisibleMetrics = useMemo(() => {
+        if (!props.baseData?.metricConfigs) return new Set<string>()
+        return new Set(
+            props.baseData.metricConfigs
+                .filter(c => props.statsDimension === 'PLAYER' ? c.defaultVisibleForPlayer : c.defaultVisibleForUser)
+                .map(c => c.metric)
+        )
+    }, [props.baseData?.metricConfigs, props.statsDimension])
+
+    useEffect(() => {
+        setVisibleMetrics(defaultVisibleMetrics)
+    }, [defaultVisibleMetrics])
+
     const availableDates = props.statsSeason && props.baseData?.matchDatesBySeason
         ? props.baseData.matchDatesBySeason[props.statsSeason] || []
         : []
+
+    const filteredLeaderboards = useMemo(() => {
+        if (!props.statsData?.leaderboards) return []
+        return props.statsData.leaderboards.filter(lb => visibleMetrics.has(lb.metric))
+    }, [props.statsData?.leaderboards, visibleMetrics])
     return (
         <>
             <div className="bg-white rounded-xl border shadow-sm mb-4">
@@ -77,13 +100,22 @@ export default function StatsTab(props: {
                         </button>
                     </div>
 
-                    <button
-                        onClick={props.onClearCache}
-                        className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
-                        disabled={props.statsLoading}
-                    >
-                        清除缓存
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setConfigModalOpen(true)}
+                            className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
+                            disabled={props.statsLoading}
+                        >
+                            显示项
+                        </button>
+                        <button
+                            onClick={props.onClearCache}
+                            className="px-3 py-2 text-sm rounded border bg-white hover:bg-gray-50 disabled:opacity-50"
+                            disabled={props.statsLoading}
+                        >
+                            清除缓存
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -111,7 +143,7 @@ export default function StatsTab(props: {
 
                     return (
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                            {(Array.isArray(statsData.leaderboards) ? statsData.leaderboards : []).map((lb) => {
+                            {filteredLeaderboards.map((lb) => {
                         const isPct = lb.metric === 'FG_PCT' || lb.metric === 'THREE_PCT'
                         const isAvgPct = lb.metric === 'FG_PCT_AVG' || lb.metric === 'THREE_PCT_AVG'
                         const isAvg = lb.metric.endsWith('_AVG')
@@ -195,6 +227,16 @@ export default function StatsTab(props: {
                         </div>
                     )
                 })()
+            )}
+
+            {configModalOpen && props.baseData?.metricConfigs && (
+                <MetricConfigModal
+                    dimension={props.statsDimension}
+                    metricConfigs={props.baseData.metricConfigs}
+                    visibleMetrics={visibleMetrics}
+                    onClose={() => setConfigModalOpen(false)}
+                    onSave={setVisibleMetrics}
+                />
             )}
         </>
     )
