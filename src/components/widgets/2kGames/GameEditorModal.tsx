@@ -126,8 +126,8 @@ export default function GameEditorModal(props: {
                 setPlayerStatsList([
                     {
                         teamType: 1,
-                        userName: '',
-                        playerName: '',
+                        userName: '偶尔打铁的小凡',
+                        playerName: '德文·布克（现役）',
                         rating: 0.0,
                         isMvp: false,
                         isSvp: false,
@@ -147,8 +147,8 @@ export default function GameEditorModal(props: {
                     },
                     {
                         teamType: 1,
-                        userName: '',
-                        playerName: '',
+                        userName: '与田祐希男友',
+                        playerName: '拉里·南斯（85）',
                         rating: 0.0,
                         isMvp: false,
                         isSvp: false,
@@ -168,8 +168,8 @@ export default function GameEditorModal(props: {
                     },
                     {
                         teamType: 1,
-                        userName: '',
-                        playerName: '',
+                        userName: 'LeslieCoral',
+                        playerName: '穆罕默德·班巴（现役）',
                         rating: 0.0,
                         isMvp: false,
                         isSvp: false,
