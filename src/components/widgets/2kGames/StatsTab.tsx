@@ -153,10 +153,6 @@ export default function StatsTab(props: {
                                 <div className="px-4 py-3 border-b flex items-center justify-between">
                                     <div>
                                         <div className="font-semibold">{lb.metricDesc}</div>
-                                        <div className="text-xs text-gray-500 mt-1">
-                                            维度：{statsData.dimension === 'PLAYER' ? '球员' : '用户'}
-                                            {statsData.season ? ` · 赛季：${statsData.season}` : ' · 全赛季'}
-                                        </div>
                                     </div>
                                 </div>
 

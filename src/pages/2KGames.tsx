@@ -179,7 +179,6 @@ export default function _2KGames() {
         <main className="flex-1 p-6 overflow-auto bg-gradient-to-br from-slate-50 via-white to-sky-50">
             <div className="mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">2K Games</h1>
-                <p className="text-sm text-gray-500 mt-1">比赛结果管理（分页查询 / 赛季筛选 / 详情 / 新增 / 编辑 / 删除）</p>
             </div>
 
             <div className="bg-white rounded-xl border shadow-sm mb-6">
