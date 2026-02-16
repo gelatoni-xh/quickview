@@ -1,7 +1,5 @@
-/**
- * 创建 TODO 项 Hook
- */
 import { useState } from 'react'
+import { createTodoItem } from '../services/todoApi'
 import type { TodoOperationResponse } from '../types/todo'
 
 interface CreateItemParams {
@@ -18,30 +16,11 @@ export function useCreateTodoItem() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError('未登录，请先登录')
-                return false
-            }
+            const result = await createTodoItem(params)
+            const response = result as unknown as TodoOperationResponse
 
-            const res = await fetch('/api/todo/item/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(params),
-            })
-
-            if (res.status === 401) {
-                setError('没有权限，请先登录')
-                return false
-            }
-
-            const result: TodoOperationResponse = await res.json()
-
-            if (!res.ok || !result.success) {
-                setError(result.message || '创建 TODO 失败')
+            if (!response.success) {
+                setError(response.message || '创建 TODO 失败')
                 return false
             }
 

@@ -1,20 +1,19 @@
 import { useState } from 'react'
-import { deleteNotice } from '../services/noticeApi'
+import { updateMatchGame } from '../services/matchGameApi'
+import type { MatchGameUpsertRequest } from '../services/matchGameApi'
 
-export function useDeleteNotice() {
+export function useUpdateMatchGame() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const deleteNoticeAction = async (id: number) => {
+    const update = async (req: MatchGameUpsertRequest): Promise<boolean> => {
         try {
             setLoading(true)
             setError(null)
 
-            const result = await deleteNotice(id)
-            const response = result as any
-
-            if (!response.success) {
-                setError(response.message || '删除公告失败')
+            const result = await updateMatchGame(req)
+            if (!result.success) {
+                setError(result.message || '更新比赛失败')
                 return false
             }
 
@@ -27,5 +26,5 @@ export function useDeleteNotice() {
         }
     }
 
-    return { deleteNotice: deleteNoticeAction, loading, error }
+    return { update, loading, error }
 }

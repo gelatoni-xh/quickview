@@ -1,7 +1,5 @@
-/**
- * 创建或更新活动记录 Hook
- */
 import { useState } from 'react'
+import { createOrUpdateActivityBlock } from '../services/activityApi'
 import type { ActivityOperationResponse } from '../types/activity'
 
 interface CreateOrUpdateParams {
@@ -21,29 +19,11 @@ export function useCreateOrUpdateActivityBlock() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError('未登录，请先登录')
-                return false
-            }
-
-            const res = await fetch('/api/activity/block/createOrUpdate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(params),
-            })
-
-            if (res.status === 401) {
-                setError('没有权限，请先登录')
-                return false
-            }
-
-            const result: ActivityOperationResponse = await res.json()
-            if (!res.ok || !result.success) {
-                setError(result.message || '保存活动记录失败')
+            const result = await createOrUpdateActivityBlock(params)
+            const response = result as unknown as ActivityOperationResponse
+            
+            if (!response.success) {
+                setError(response.message || '保存活动记录失败')
                 return false
             }
 

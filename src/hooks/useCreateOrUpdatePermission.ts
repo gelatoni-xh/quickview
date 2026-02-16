@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { apiPost } from '../utils/api'
-import type { BaseResponse } from '../types/rbac'
+import { createPermission, updatePermission } from '../services/rbacApi'
 
 export function useCreateOrUpdatePermission() {
     const [loading, setLoading] = useState(false)
@@ -11,10 +10,7 @@ export function useCreateOrUpdatePermission() {
             setLoading(true)
             setError(null)
 
-            const result = await apiPost<BaseResponse<number>>('/api/permission/create', {
-                permissionCode: params.permissionCode,
-                permissionName: params.permissionName,
-            })
+            const result = await createPermission(params)
 
             if (!result.success) {
                 setError(result.message || '创建权限失败')
@@ -35,11 +31,7 @@ export function useCreateOrUpdatePermission() {
             setLoading(true)
             setError(null)
 
-            const result = await apiPost<BaseResponse<number>>('/api/permission/update', {
-                id: params.id,
-                permissionCode: params.permissionCode,
-                permissionName: params.permissionName,
-            })
+            const result = await updatePermission(params)
 
             if (!result.success) {
                 setError(result.message || '更新权限失败')

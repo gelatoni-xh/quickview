@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiGet } from '../utils/api'
-import type { BaseResponse, PermissionDTO } from '../types/rbac'
+import { getPermissions } from '../services/rbacApi'
+import type { PermissionDTO } from '../types/rbac'
 
 export function usePermissions() {
     const [data, setData] = useState<PermissionDTO[]>([])
@@ -12,7 +12,7 @@ export function usePermissions() {
             setLoading(true)
             setError(null)
 
-            const result = await apiGet<BaseResponse<PermissionDTO[]>>('/api/permission/list')
+            const result = await getPermissions()
             if (!result.success) {
                 setError(result.message || '获取权限列表失败')
                 setData([])

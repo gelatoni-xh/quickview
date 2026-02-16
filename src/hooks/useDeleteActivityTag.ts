@@ -1,7 +1,5 @@
-/**
- * 删除活动标签 Hook
- */
 import { useState } from 'react'
+import { deleteActivityTag } from '../services/activityApi'
 import type { ActivityOperationResponse } from '../types/activity'
 
 interface DeleteTagParams {
@@ -17,29 +15,11 @@ export function useDeleteActivityTag() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError('未登录，请先登录')
-                return false
-            }
-
-            const res = await fetch('/api/activity/tag/delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(params),
-            })
-
-            if (res.status === 401) {
-                setError('没有权限，请先登录')
-                return false
-            }
-
-            const result: ActivityOperationResponse = await res.json()
-            if (!res.ok || !result.success) {
-                setError(result.message || '删除标签失败')
+            const result = await deleteActivityTag(params)
+            const response = result as unknown as ActivityOperationResponse
+            
+            if (!response.success) {
+                setError(response.message || '删除标签失败')
                 return false
             }
 

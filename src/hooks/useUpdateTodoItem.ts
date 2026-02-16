@@ -1,7 +1,5 @@
-/**
- * 更新 TODO 项 Hook
- */
 import { useState } from 'react'
+import { updateTodoItem } from '../services/todoApi'
 import type { TodoOperationResponse } from '../types/todo'
 
 interface UpdateItemParams {
@@ -20,30 +18,11 @@ export function useUpdateTodoItem() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError('未登录，请先登录')
-                return false
-            }
+            const result = await updateTodoItem(params)
+            const response = result as unknown as TodoOperationResponse
 
-            const res = await fetch('/api/todo/item/update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(params),
-            })
-
-            if (res.status === 401) {
-                setError('没有权限，请先登录')
-                return false
-            }
-
-            const result: TodoOperationResponse = await res.json()
-
-            if (!res.ok || !result.success) {
-                setError(result.message || '更新 TODO 失败')
+            if (!response.success) {
+                setError(response.message || '更新 TODO 失败')
                 return false
             }
 

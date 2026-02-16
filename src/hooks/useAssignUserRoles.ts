@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { apiPost } from '../utils/api'
-import type { BaseResponse } from '../types/rbac'
+import { assignUserRoles } from '../services/rbacApi'
 
 export function useAssignUserRoles() {
     const [loading, setLoading] = useState(false)
@@ -11,10 +10,7 @@ export function useAssignUserRoles() {
             setLoading(true)
             setError(null)
 
-            const result = await apiPost<BaseResponse<number>>('/api/user/assign-role', {
-                userId: params.userId,
-                roleIds: params.roleIds,
-            })
+            const result = await assignUserRoles(params)
 
             if (!result.success) {
                 setError(result.message || '分配角色失败')

@@ -1,10 +1,6 @@
-/**
- * TODO 标签数据获取 Hook
- *
- * 获取所有标签列表。
- */
 import { useCallback, useEffect, useState } from 'react'
-import type { TodoTag, TodoTagListResponse } from '../types/todo'
+import { getTodoTags } from '../services/todoApi'
+import type { TodoTag } from '../types/todo'
 
 export function useTodoTags() {
     const [data, setData] = useState<TodoTag[]>([])
@@ -16,14 +12,7 @@ export function useTodoTags() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            const headers: HeadersInit = {}
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`
-            }
-            const res = await fetch('/api/todo/tag/list', { headers })
-            const result: TodoTagListResponse = await res.json()
-
+            const result = await getTodoTags()
             setData(Array.isArray(result.data) ? result.data : [])
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err))

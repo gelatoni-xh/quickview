@@ -1,7 +1,5 @@
-/**
- * 创建 TODO 标签 Hook
- */
 import { useState } from 'react'
+import { createTodoTag } from '../services/todoApi'
 import type { TodoOperationResponse } from '../types/todo'
 
 interface CreateTagParams {
@@ -17,30 +15,11 @@ export function useCreateTodoTag() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError('未登录，请先登录')
-                return false
-            }
+            const result = await createTodoTag(params)
+            const response = result as unknown as TodoOperationResponse
 
-            const res = await fetch('/api/todo/tag/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(params),
-            })
-
-            if (res.status === 401) {
-                setError('没有权限，请先登录')
-                return false
-            }
-
-            const result: TodoOperationResponse = await res.json()
-
-            if (!res.ok || !result.success) {
-                setError(result.message || '创建标签失败')
+            if (!response.success) {
+                setError(response.message || '创建标签失败')
                 return false
             }
 

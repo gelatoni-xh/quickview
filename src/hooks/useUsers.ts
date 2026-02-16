@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiGet } from '../utils/api'
-import type { BaseResponse, UserDTO } from '../types/rbac'
+import { getUsers } from '../services/rbacApi'
+import type { UserDTO } from '../types/rbac'
 
 export function useUsers() {
     const [data, setData] = useState<UserDTO[]>([])
@@ -12,7 +12,7 @@ export function useUsers() {
             setLoading(true)
             setError(null)
 
-            const result = await apiGet<BaseResponse<UserDTO[]>>('/api/user/list')
+            const result = await getUsers()
             if (!result.success) {
                 setError(result.message || '获取用户列表失败')
                 setData([])

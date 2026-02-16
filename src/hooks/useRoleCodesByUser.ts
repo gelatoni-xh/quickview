@@ -1,48 +1,41 @@
-import { useState, useEffect } from 'react';
-import { apiGet } from '../utils/api';
-
-interface RoleCodesByUserResponse {
-    success: boolean;
-    data: string[];
-    message?: string;
-    traceId?: string;
-}
+import { useState, useEffect } from 'react'
+import { getRoleCodesByUser } from '../services/rbacApi'
 
 export function useRoleCodesByUser(userId: number | null) {
-    const [data, setData] = useState<string[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<string[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
     const fetchRoleCodes = async () => {
         if (userId === null) {
-            setData([]);
-            setLoading(false);
-            return;
+            setData([])
+            setLoading(false)
+            return
         }
 
         try {
-            setLoading(true);
-            setError(null);
+            setLoading(true)
+            setError(null)
             
-            const result: RoleCodesByUserResponse = await apiGet(`/api/user/roles-by-user/${userId}`);
+            const result = await getRoleCodesByUser(userId)
             
             if (!result.success) {
-                setError(result.message || '获取用户角色失败');
-                setData([]);
+                setError(result.message || '获取用户角色失败')
+                setData([])
             } else {
-                setData(result.data || []);
+                setData(result.data || [])
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : String(err));
-            setData([]);
+            setError(err instanceof Error ? err.message : String(err))
+            setData([])
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     useEffect(() => {
-        fetchRoleCodes();
-    }, [userId]);
+        fetchRoleCodes()
+    }, [userId])
 
-    return { data, loading, error, refresh: fetchRoleCodes };
+    return { data, loading, error, refresh: fetchRoleCodes }
 }

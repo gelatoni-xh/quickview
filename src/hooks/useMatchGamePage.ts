@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getRoles } from '../services/rbacApi'
-import type { RoleDTO } from '../types/rbac'
+import { getMatchGamePage } from '../services/matchGameApi'
+import type { MatchGameDTO, MatchGamePageResponse } from '../types/matchGame'
 
-export function useRoles() {
-    const [data, setData] = useState<RoleDTO[]>([])
-    const [loading, setLoading] = useState(true)
+export interface UseMatchGamePageParams {
+    pageNum: number
+    pageSize: number
+    season: string | null
+}
+
+export function useMatchGamePage(params: UseMatchGamePageParams) {
+    const [data, setData] = useState<MatchGameDTO[]>([])
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const fetchData = useCallback(async () => {
@@ -12,9 +18,9 @@ export function useRoles() {
             setLoading(true)
             setError(null)
 
-            const result = await getRoles()
+            const result = await getMatchGamePage(params)
             if (!result.success) {
-                setError(result.message || '获取角色列表失败')
+                setError(result.message || '获取比赛列表失败')
                 setData([])
                 return
             }
@@ -22,10 +28,11 @@ export function useRoles() {
             setData(Array.isArray(result.data) ? result.data : [])
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err))
+            setData([])
         } finally {
             setLoading(false)
         }
-    }, [])
+    }, [params.pageNum, params.pageSize, params.season])
 
     useEffect(() => {
         fetchData()

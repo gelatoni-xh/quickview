@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { apiPost } from '../utils/api'
-import type { BaseResponse } from '../types/rbac'
+import { assignRolePermissions } from '../services/rbacApi'
 
 export function useAssignRolePermissions() {
     const [loading, setLoading] = useState(false)
@@ -11,10 +10,7 @@ export function useAssignRolePermissions() {
             setLoading(true)
             setError(null)
 
-            const result = await apiPost<BaseResponse<number>>('/api/role/assign-permission', {
-                roleId: params.roleId,
-                permissionIds: params.permissionIds,
-            })
+            const result = await assignRolePermissions(params)
 
             if (!result.success) {
                 setError(result.message || '分配权限失败')

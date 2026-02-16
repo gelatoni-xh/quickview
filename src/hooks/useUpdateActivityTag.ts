@@ -1,7 +1,5 @@
-/**
- * 更新活动标签 Hook
- */
 import { useState } from 'react'
+import { updateActivityTag } from '../services/activityApi'
 import type { ActivityOperationResponse } from '../types/activity'
 
 interface UpdateTagParams {
@@ -19,29 +17,11 @@ export function useUpdateActivityTag() {
             setLoading(true)
             setError(null)
 
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setError('未登录，请先登录')
-                return false
-            }
-
-            const res = await fetch('/api/activity/tag/update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(params),
-            })
-
-            if (res.status === 401) {
-                setError('没有权限，请先登录')
-                return false
-            }
-
-            const result: ActivityOperationResponse = await res.json()
-            if (!res.ok || !result.success) {
-                setError(result.message || '更新标签失败')
+            const result = await updateActivityTag(params)
+            const response = result as unknown as ActivityOperationResponse
+            
+            if (!response.success) {
+                setError(response.message || '更新标签失败')
                 return false
             }
 
