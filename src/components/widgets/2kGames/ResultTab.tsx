@@ -129,7 +129,6 @@ export default function ResultTab(props: {
                                 <tr>
                                     <th className="text-left px-4 py-2 font-medium">ID</th>
                                     <th className="text-left px-4 py-2 font-medium">赛季</th>
-                                    <th className="text-left px-4 py-2 font-medium">场次</th>
                                     <th className="text-left px-4 py-2 font-medium">时间</th>
                                     <th className="text-left px-4 py-2 font-medium">比分</th>
                                     <th className="text-left px-4 py-2 font-medium">结果</th>
@@ -142,7 +141,6 @@ export default function ResultTab(props: {
                                     <tr key={g.id} className="border-t hover:bg-blue-50">
                                         <td className="px-4 py-2">{g.id}</td>
                                         <td className="px-4 py-2">{g.season}</td>
-                                        <td className="px-4 py-2">{g.seasonMatchNo}</td>
                                         <td className="px-4 py-2">{formatDatetime(g.matchTime)}</td>
                                         <td className="px-4 py-2">{g.myScore} - {g.oppScore}</td>
                                         <td className="px-4 py-2">
@@ -180,7 +178,7 @@ export default function ResultTab(props: {
 
                                 {props.data.length === 0 && (
                                     <tr className="border-t">
-                                        <td className="px-4 py-8 text-center text-gray-400" colSpan={8}>
+                                        <td className="px-4 py-8 text-center text-gray-400" colSpan={7}>
                                             暂无比赛数据
                                         </td>
                                     </tr>

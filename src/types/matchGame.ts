@@ -22,7 +22,6 @@ export interface MatchGameBaseDataDTO {
 export interface MatchGameDTO {
     id: number
     season: string
-    seasonMatchNo: number
     matchTime: string
     isRobot: boolean
     myScore: number

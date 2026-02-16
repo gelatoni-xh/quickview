@@ -22,7 +22,6 @@ export interface MatchGamePageRequest {
 export interface MatchGameUpsertRequest {
     id?: number
     season: string
-    seasonMatchNo: number
     matchTime: string
     isRobot: boolean
     myScore: number

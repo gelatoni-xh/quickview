@@ -50,7 +50,6 @@ export default function GameDetailModal(props: {
                             <div className="text-sm font-medium">基础信息</div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm mt-2">
                                 <div>赛季：{data.matchGame.season}</div>
-                                <div>赛季场次：{data.matchGame.seasonMatchNo}</div>
                                 <div>时间：{formatDatetime(data.matchGame.matchTime)}</div>
                                 <div>结果：{data.matchGame.result ? '胜' : '负'}</div>
                                 <div>比分：{data.matchGame.myScore} - {data.matchGame.oppScore}</div>

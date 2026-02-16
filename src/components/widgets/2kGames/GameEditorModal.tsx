@@ -20,7 +20,6 @@ type EditorTabKey = 'base' | 'team' | 'player'
 
 type GameEditorValue = {
     season: string
-    seasonMatchNo: number
     matchTime: string
     isRobot: boolean
     myScore: number
@@ -42,7 +41,6 @@ export default function GameEditorModal(props: {
     const [tab, setTab] = useState<EditorTabKey>('base')
 
     const [season, setSeason] = useState('')
-    const [seasonMatchNo, setSeasonMatchNo] = useState<number>(1)
     const [matchTime, setMatchTime] = useState('')
     const [isRobot, setIsRobot] = useState<boolean>(false)
     const [myScore, setMyScore] = useState<number>(0)
@@ -64,7 +62,6 @@ export default function GameEditorModal(props: {
         setTab('base')
         if (props.game) {
             setSeason(props.game.season || '')
-            setSeasonMatchNo(props.game.seasonMatchNo || 1)
             setMatchTime(toInputDatetimeLocalValue(props.game.matchTime))
             setIsRobot(!!props.game.isRobot)
             setMyScore(props.game.myScore || 0)
@@ -78,7 +75,6 @@ export default function GameEditorModal(props: {
             }
         } else {
             setSeason('')
-            setSeasonMatchNo(1)
             setMatchTime('')
             setIsRobot(false)
             setMyScore(0)
@@ -110,7 +106,6 @@ export default function GameEditorModal(props: {
 
                 if (detail.matchGame) {
                     setSeason(detail.matchGame.season || '')
-                    setSeasonMatchNo(detail.matchGame.seasonMatchNo || 1)
                     setMatchTime(toInputDatetimeLocalValue(detail.matchGame.matchTime))
                     setIsRobot(!!detail.matchGame.isRobot)
                     setMyScore(detail.matchGame.myScore || 0)
@@ -158,7 +153,6 @@ export default function GameEditorModal(props: {
 
         return {
             season: season.trim(),
-            seasonMatchNo,
             matchTime: normalizeLocalDateTime(matchTime),
             isRobot,
             myScore,
@@ -297,18 +291,6 @@ export default function GameEditorModal(props: {
                                     placeholder="或手动输入"
                                 />
                             </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm text-gray-600 mb-1">赛季第几场</label>
-                            <input
-                                className="w-full border rounded px-3 py-2 text-sm"
-                                type="number"
-                                value={seasonMatchNo}
-                                onChange={(e) => setSeasonMatchNo(ensureNumber(e.target.value, 1))}
-                                disabled={loading}
-                                min={1}
-                            />
                         </div>
 
                         <div>
