@@ -1,15 +1,10 @@
 import { useState, useMemo } from 'react'
-import type { MatchGameBaseDataDTO } from '../../../types/matchGame'
 import UnbeatenOpponentsInsight from './insights/UnbeatenOpponentsInsight'
 import PlayerPerformanceTrendInsight from './insights/PlayerPerformanceTrendInsight'
 
 type InsightKey = 'unbeaten' | 'trend'
 
-interface InsightsTabProps {
-    baseData: MatchGameBaseDataDTO | null
-}
-
-export default function InsightsTab({ baseData }: InsightsTabProps) {
+export default function InsightsTab() {
     const [insightTab, setInsightTab] = useState<InsightKey>('unbeaten')
 
     const insightTabs = useMemo(() => {
@@ -40,7 +35,7 @@ export default function InsightsTab({ baseData }: InsightsTabProps) {
 
             <div className="mt-6">
                 {insightTab === 'unbeaten' && <UnbeatenOpponentsInsight />}
-                {insightTab === 'trend' && <PlayerPerformanceTrendInsight baseData={baseData} />}
+                {insightTab === 'trend' && <PlayerPerformanceTrendInsight />}
             </div>
         </div>
     )

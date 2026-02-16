@@ -263,7 +263,7 @@ export default function _2KGames() {
                 />
             )}
 
-            {tab === 'insights' && <InsightsTab baseData={baseData} />}
+            {tab === 'insights' && <InsightsTab />}
 
             {editorOpen && (
                 <GameEditorModal

@@ -139,8 +139,6 @@ export default function StatsTab(props: {
 
             {!props.statsLoading && !props.statsError && props.statsData && (
                 (() => {
-                    const statsData = props.statsData
-
                     return (
                         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                             {filteredLeaderboards.map((lb) => {

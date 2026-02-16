@@ -1,6 +1,6 @@
 import { apiDelete, apiGet, apiPost } from '../utils/api'
 import type { ApiPostBody } from '../utils/api'
-import type { TodoItem, TodoItemListResponse, TodoTag, TodoTagListResponse } from '../types/todo'
+import type { TodoItemListResponse, TodoTagListResponse } from '../types/todo'
 
 export interface CreateTodoItemRequest {
     content: string

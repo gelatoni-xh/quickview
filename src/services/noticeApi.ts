@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost } from '../utils/api'
+import { apiDelete, apiPost } from '../utils/api'
 import type { ApiPostBody } from '../utils/api'
 import type { NoticePageResponse } from '../types/notices'
 

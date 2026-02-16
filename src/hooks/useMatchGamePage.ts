@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getMatchGamePage } from '../services/matchGameApi'
-import type { MatchGameDTO, MatchGamePageResponse } from '../types/matchGame'
+import type { MatchGameDTO } from '../types/matchGame'
 
 export interface UseMatchGamePageParams {
     pageNum: number

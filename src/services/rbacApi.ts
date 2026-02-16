@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost } from '../utils/api'
+import { apiGet, apiPost } from '../utils/api'
 import type { ApiPostBody } from '../utils/api'
 import type { BaseResponse, PermissionDTO, RoleDTO, UserDTO } from '../types/rbac'
 

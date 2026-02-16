@@ -1,11 +1,6 @@
 import { useMemo } from 'react'
-import type { MatchGameBaseDataDTO } from '../../../../types/matchGame'
 
-interface PlayerPerformanceTrendInsightProps {
-    baseData: MatchGameBaseDataDTO | null
-}
-
-export default function PlayerPerformanceTrendInsight({ baseData }: PlayerPerformanceTrendInsightProps) {
+export default function PlayerPerformanceTrendInsight() {
     const mockData = useMemo(() => {
         return [
             { date: '2026-02-10', score: 28, assists: 5, rebounds: 8, efficiency: 52 },
