@@ -8,8 +8,9 @@ import GameDetailModal from '../components/widgets/2kGames/GameDetailModal.tsx'
 import GameEditorModal from '../components/widgets/2kGames/GameEditorModal.tsx'
 import ResultTab from '../components/widgets/2kGames/ResultTab.tsx'
 import StatsTab from '../components/widgets/2kGames/StatsTab.tsx'
+import InsightsTab from '../components/widgets/2kGames/InsightsTab.tsx'
 
-type TabKey = 'result' | 'stats'
+type TabKey = 'result' | 'stats' | 'insights'
 
 type GameEditorMode = 'create' | 'edit'
 
@@ -57,6 +58,7 @@ export default function _2KGames() {
         return [
             { key: 'result' as const, label: '比赛结果' },
             { key: 'stats' as const, label: '数据统计' },
+            { key: 'insights' as const, label: '进阶统计' },
         ]
     }, [])
 
@@ -260,6 +262,8 @@ export default function _2KGames() {
                     onClearCache={handleClearCache}
                 />
             )}
+
+            {tab === 'insights' && <InsightsTab baseData={baseData} />}
 
             {editorOpen && (
                 <GameEditorModal

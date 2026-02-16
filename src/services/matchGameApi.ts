@@ -11,6 +11,7 @@ import type {
     MatchGameUpdateResponse,
     MatchPlayerStatsDTO,
     MatchTeamStatsDTO,
+    OpponentStatsResponse,
 } from '../types/matchGame'
 
 export interface MatchGamePageRequest {
@@ -71,4 +72,11 @@ export async function clearMatchGameCache() {
 
 export async function getMatchGameBaseData() {
     return apiGet<MatchGameBaseDataResponse>('/api/match-game/base-data')
+}
+
+export async function getOpponentStats(season?: string | null, minGames?: number) {
+    const params = new URLSearchParams()
+    if (season) params.append('season', season)
+    if (minGames) params.append('minGames', minGames.toString())
+    return apiGet<OpponentStatsResponse>(`/api/match-game/opponent-stats${params.toString() ? '?' + params.toString() : ''}`)
 }

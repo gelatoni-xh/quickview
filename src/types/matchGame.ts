@@ -108,6 +108,27 @@ export interface MatchGameStatsDTO {
     leaderboards: MatchGameStatsLeaderboard[]
 }
 
+export interface OpponentRecord {
+    playerName: string
+    totalGames: number
+    wins: number
+    losses: number
+    winRate: number
+    pointDifferential: number
+}
+
+export interface OpponentStatsSummary {
+    totalOpponents: number
+    maxLosses: number
+    avgWinRate: number
+}
+
+export interface OpponentStatsDTO {
+    season?: string
+    opponents: OpponentRecord[]
+    summary: OpponentStatsSummary
+}
+
 export type MatchGamePageResponse = BaseResponse<MatchGameDTO[]>
 export type MatchGameCreateResponse = BaseResponse<number>
 export type MatchGameUpdateResponse = BaseResponse<boolean>
@@ -115,3 +136,4 @@ export type MatchGameDeleteResponse = BaseResponse<boolean>
 export type MatchGameDetailResponse = BaseResponse<MatchGameDetailDTO>
 export type MatchGameStatsResponse = BaseResponse<MatchGameStatsDTO>
 export type MatchGameBaseDataResponse = BaseResponse<MatchGameBaseDataDTO>
+export type OpponentStatsResponse = BaseResponse<OpponentStatsDTO>
