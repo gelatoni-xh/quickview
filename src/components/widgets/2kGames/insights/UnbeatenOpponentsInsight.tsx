@@ -67,7 +67,7 @@ export default function UnbeatenOpponentsInsight({ season }: UnbeatenOpponentsIn
                                     <th className="px-4 py-3 text-center font-semibold text-gray-700">胜场</th>
                                     <th className="px-4 py-3 text-center font-semibold text-gray-700">负场</th>
                                     <th className="px-4 py-3 text-center font-semibold text-gray-700">胜率</th>
-                                    <th className="px-4 py-3 text-center font-semibold text-gray-700">净胜分</th>
+                                    <th className="px-4 py-3 text-center font-semibold text-gray-700">场均净胜分</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,8 +79,8 @@ export default function UnbeatenOpponentsInsight({ season }: UnbeatenOpponentsIn
                                         <td className="px-4 py-3 text-center text-red-600 font-semibold">{row.losses}</td>
                                         <td className="px-4 py-3 text-center text-gray-700">{(row.winRate * 100).toFixed(0)}%</td>
                                         <td className="px-4 py-3 text-center">
-                                            <span className={`font-semibold ${row.pointDifferential > 0 ? 'text-green-600' : row.pointDifferential < 0 ? 'text-red-600' : 'text-gray-600'}`}>
-                                                {row.pointDifferential > 0 ? '+' : ''}{row.pointDifferential}
+                                            <span className={`font-semibold ${row.avgPointDifferential > 0 ? 'text-green-600' : row.avgPointDifferential < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+                                                {row.avgPointDifferential > 0 ? '+' : ''}{row.avgPointDifferential.toFixed(1)}
                                             </span>
                                         </td>
                                     </tr>

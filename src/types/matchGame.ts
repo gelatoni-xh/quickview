@@ -114,7 +114,7 @@ export interface OpponentRecord {
     wins: number
     losses: number
     winRate: number
-    pointDifferential: number
+    avgPointDifferential: number
 }
 
 export interface OpponentStatsSummary {
