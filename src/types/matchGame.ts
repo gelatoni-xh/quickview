@@ -117,16 +117,9 @@ export interface OpponentRecord {
     avgPointDifferential: number
 }
 
-export interface OpponentStatsSummary {
-    totalOpponents: number
-    maxLosses: number
-    avgWinRate: number
-}
-
 export interface OpponentStatsDTO {
     season?: string
     opponents: OpponentRecord[]
-    summary: OpponentStatsSummary
 }
 
 export type MatchGamePageResponse = BaseResponse<MatchGameDTO[]>

@@ -89,20 +89,6 @@ export default function UnbeatenOpponentsInsight({ season }: UnbeatenOpponentsIn
                         </table>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                            <div className="text-2xl font-bold text-blue-600">{opponentStats?.summary.maxLosses || 0}</div>
-                            <div className="text-sm text-gray-600 mt-1">最难对手的负场数</div>
-                        </div>
-                        <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                            <div className="text-2xl font-bold text-green-600">{opponentStats?.summary.totalOpponents || 0}</div>
-                            <div className="text-sm text-gray-600 mt-1">统计对手数</div>
-                        </div>
-                        <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-                            <div className="text-2xl font-bold text-purple-600">{((opponentStats?.summary.avgWinRate || 0) * 100).toFixed(0)}%</div>
-                            <div className="text-sm text-gray-600 mt-1">平均胜率</div>
-                        </div>
-                    </div>
                 </>
             )}
         </div>
