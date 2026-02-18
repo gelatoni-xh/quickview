@@ -1,5 +1,9 @@
 import { useMemo, useEffect, useState } from 'react'
 import { getMatchGameTrend } from '../../../../services/matchGameApi'
+import { Chart as ChartJS, CategoryScale, LinearScale, BarController, BarElement, LineController, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js'
+import { Bar, Line } from 'react-chartjs-2'
+
+ChartJS.register(CategoryScale, LinearScale, BarController, BarElement, LineController, LineElement, Title, Tooltip, Legend, Filler)
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
 
@@ -43,6 +47,46 @@ export default function PlayerPerformanceTrendInsight() {
         }
     }, [trendData])
 
+    const playerChartData = useMemo(() => {
+        if (!trendData?.playerMetrics || !trendData?.dates) return null
+        
+        const datasets = playerNames.map((playerName, idx) => ({
+            label: playerName,
+            data: trendData.playerMetrics[playerName][selectedMetric] || [],
+            backgroundColor: COLORS[idx % COLORS.length],
+            borderColor: COLORS[idx % COLORS.length],
+            borderWidth: 1,
+            borderRadius: 4,
+        }))
+
+        return {
+            labels: trendData.dates.map((date: string) => date.split('-')[2]),
+            datasets
+        }
+    }, [trendData, selectedMetric, playerNames])
+
+    const winRateChartData = useMemo(() => {
+        if (!trendData?.winRate || !trendData?.dates) return null
+        
+        return {
+            labels: trendData.dates.map((date: string) => date.split('-')[2]),
+            datasets: [{
+                label: '胜率',
+                data: trendData.winRate.map((rate: number) => (rate * 100).toFixed(1)),
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#3b82f6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }]
+        }
+    }, [trendData])
+
     if (loading) {
         return <div className="p-4 text-center text-gray-500">加载中...</div>
     }
@@ -59,95 +103,38 @@ export default function PlayerPerformanceTrendInsight() {
         return labels[metric] || metric
     }
 
-    const renderLineChart = () => {
-        if (!trendData?.dates || playerNames.length === 0) return null
-
-        const maxValue = Math.max(
-            ...playerNames.flatMap(p => trendData.playerMetrics[p][selectedMetric] || [])
-        ) || 1
-
-        return (
-            <div className="bg-white rounded-lg border p-4">
-                <div className="mb-4 flex gap-2 flex-wrap">
-                    {['score', 'assist', 'rebound', 'rating', 'steal', 'block'].map(metric => (
-                        <button
-                            key={metric}
-                            onClick={() => setSelectedMetric(metric)}
-                            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                                selectedMetric === metric
-                                    ? 'bg-blue-500 text-white'
-                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                            }`}
-                        >
-                            {getMetricLabel(metric)}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="overflow-x-auto">
-                    <svg width="100%" height="300" viewBox={`0 0 ${trendData.dates.length * 60 + 60} 300`} className="min-w-full">
-                        {/* Y轴 */}
-                        <line x1="40" y1="20" x2="40" y2="260" stroke="#ccc" strokeWidth="1" />
-                        {/* X轴 */}
-                        <line x1="40" y1="260" x2={trendData.dates.length * 60 + 40} y2="260" stroke="#ccc" strokeWidth="1" />
-
-                        {/* 网格线和Y轴标签 */}
-                        {[0, 0.25, 0.5, 0.75, 1].map((ratio, i) => {
-                            const y = 260 - ratio * 240
-                            const value = Math.round(maxValue * ratio * 10) / 10
-                            return (
-                                <g key={i}>
-                                    <line x1="35" y1={y} x2={trendData.dates.length * 60 + 40} y2={y} stroke="#f0f0f0" strokeWidth="1" />
-                                    <text x="5" y={y + 4} fontSize="12" fill="#999" textAnchor="end">{value}</text>
-                                </g>
-                            )
-                        })}
-
-                        {/* 绘制每个球员的折线 */}
-                        {playerNames.map((playerName, playerIdx) => {
-                            const values = trendData.playerMetrics[playerName][selectedMetric] || []
-                            const points = values.map((v: number, idx: number) => {
-                                const x = 40 + idx * 60 + 30
-                                const y = 260 - (v / maxValue) * 240
-                                return `${x},${y}`
-                            }).join(' ')
-
-                            return (
-                                <g key={playerName}>
-                                    <polyline points={points} fill="none" stroke={COLORS[playerIdx % COLORS.length]} strokeWidth="2" />
-                                    {values.map((v: number, idx: number) => (
-                                        <circle
-                                            key={`${playerName}-${idx}`}
-                                            cx={40 + idx * 60 + 30}
-                                            cy={260 - (v / maxValue) * 240}
-                                            r="3"
-                                            fill={COLORS[playerIdx % COLORS.length]}
-                                        />
-                                    ))}
-                                </g>
-                            )
-                        })}
-
-                        {/* X轴标签 */}
-                        {trendData.dates.map((date: string, idx: number) => (
-                            <text key={idx} x={40 + idx * 60 + 30} y="280" fontSize="12" fill="#666" textAnchor="middle">
-                                {date.split('-')[2]}
-                            </text>
-                        ))}
-                    </svg>
-                </div>
-
-                {/* 图例 */}
-                <div className="mt-4 flex flex-wrap gap-4">
-                    {playerNames.map((playerName, idx) => (
-                        <div key={playerName} className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-                            <span className="text-sm text-gray-700">{playerName}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        )
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                position: 'top' as const,
+                labels: {
+                    usePointStyle: true,
+                    padding: 15,
+                    font: { size: 12 }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                titleFont: { size: 13 },
+                bodyFont: { size: 12 },
+                borderColor: '#ddd',
+                borderWidth: 1,
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                ticks: { font: { size: 11 } }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { font: { size: 11 } }
+            }
+        }
     }
 
     return (
@@ -172,25 +159,40 @@ export default function PlayerPerformanceTrendInsight() {
                 </div>
             </div>
 
-            {renderLineChart()}
+            {/* 指标选择按钮 */}
+            <div className="bg-white rounded-lg border p-4">
+                <div className="mb-4 flex gap-2 flex-wrap">
+                    {['score', 'assist', 'rebound', 'rating', 'steal', 'block'].map(metric => (
+                        <button
+                            key={metric}
+                            onClick={() => setSelectedMetric(metric)}
+                            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                                selectedMetric === metric
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                        >
+                            {getMetricLabel(metric)}
+                        </button>
+                    ))}
+                </div>
 
+                {/* 球员数据柱状图 */}
+                {playerChartData && (
+                    <div className="h-80">
+                        <Bar data={playerChartData} options={chartOptions} />
+                    </div>
+                )}
+            </div>
+
+            {/* 胜率趋势折线图 */}
             <div className="bg-white rounded-lg border p-4">
                 <h4 className="font-semibold text-gray-900 mb-4">胜率趋势</h4>
-                <div className="flex items-end gap-1 h-24">
-                    {trendData?.winRate?.map((rate: number, idx: number) => (
-                        <div
-                            key={idx}
-                            className="flex-1 bg-gradient-to-t from-blue-500 to-blue-300 rounded-t hover:opacity-80 transition-opacity"
-                            style={{ height: `${rate * 100}%` }}
-                            title={`${trendData.dates[idx]}: ${(rate * 100).toFixed(0)}%`}
-                        />
-                    ))}
-                </div>
-                <div className="flex justify-between text-xs text-gray-600 mt-2">
-                    {trendData?.dates?.map((date: string, idx: number) => (
-                        <span key={idx}>{date.split('-')[2]}</span>
-                    ))}
-                </div>
+                {winRateChartData && (
+                    <div className="h-80">
+                        <Line data={winRateChartData} options={chartOptions} />
+                    </div>
+                )}
             </div>
         </div>
     )
