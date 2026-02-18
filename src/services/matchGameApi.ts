@@ -48,7 +48,7 @@ export interface MatchGameTrendRequest {
     dimension: string
 }
 
-export interface MatchGameTrendResponse {
+export interface MatchGameTrendData {
     dates: string[]
     winRate: number[]
     playerMetrics: {
@@ -61,6 +61,14 @@ export interface MatchGameTrendResponse {
             block: number[]
         }
     }
+}
+
+export interface MatchGameTrendResponse {
+    success: boolean
+    statusCode: string
+    data: MatchGameTrendData
+    message: string | null
+    traceId: string
 }
 
 export async function getMatchGamePage(req: MatchGamePageRequest) {
