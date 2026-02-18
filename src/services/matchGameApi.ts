@@ -42,6 +42,25 @@ export interface MatchGameStatsRequest {
     dimension: MatchGameStatsDimension
 }
 
+export interface MatchGameTrendRequest {
+    season: string | null
+    excludeRobot: boolean
+    dimension: string
+}
+
+export interface MatchGameTrendResponse {
+    dates: string[]
+    metrics: {
+        winRate: number[]
+        rating: number[]
+        score: number[]
+        rebound: number[]
+        assist: number[]
+        steal: number[]
+        block: number[]
+    }
+}
+
 export async function getMatchGamePage(req: MatchGamePageRequest) {
     return apiPost<MatchGamePageResponse>('/api/match-game/page', req as unknown as ApiPostBody)
 }
@@ -64,6 +83,10 @@ export async function deleteMatchGame(gameId: number) {
 
 export async function getMatchGameStats(req: MatchGameStatsRequest) {
     return apiPost<MatchGameStatsResponse>('/api/match-game/stats', req as unknown as ApiPostBody)
+}
+
+export async function getMatchGameTrend(req: MatchGameTrendRequest) {
+    return apiPost<MatchGameTrendResponse>('/api/match-game/trend', req as unknown as ApiPostBody)
 }
 
 export async function clearMatchGameCache() {
