@@ -1,11 +1,32 @@
 import { useMemo, useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js'
 import { getMatchGameTrend } from '../../../../services/matchGameApi'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
 const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
+
+const drawLabels = (chart: any) => {
+    const ctx = chart.ctx
+    const datasets = chart.data.datasets
+    const xScale = chart.scales.x
+    const yScale = chart.scales.y
+
+    datasets.forEach((dataset: any, datasetIndex: number) => {
+        dataset.data.forEach((value: number, index: number) => {
+            if (value === null || value === undefined) return
+            const x = xScale.getPixelForValue(index)
+            const y = yScale.getPixelForValue(value)
+            
+            ctx.fillStyle = '#000'
+            ctx.font = '11px Arial'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'bottom'
+            ctx.fillText(value.toFixed(3) + '%', x, y - 8)
+        })
+    })
+}
 
 export default function PlayerPerformanceTrendInsight() {
     const [trendData, setTrendData] = useState<any>(null)
@@ -45,31 +66,27 @@ export default function PlayerPerformanceTrendInsight() {
         return Object.keys(trendData.playerMetrics).sort()
     }, [trendData])
 
-    const winRateStats = useMemo(() => {
-        if (!trendData?.winRate) return { avg: '0', max: 0, min: 0 }
-        const rates = trendData.winRate
-        return {
-            avg: (rates.reduce((a: number, b: number) => a + b, 0) / rates.length * 100).toFixed(1),
-            max: Math.max(...rates) * 100,
-            min: Math.min(...rates) * 100,
-        }
-    }, [trendData])
-
     if (loading) {
         return <div className="p-4 text-center text-gray-500">加载中...</div>
     }
 
     const getMetricLabel = (metric: string) => {
         const labels: { [key: string]: string } = {
+            rating: '评价',
             score: '得分',
             assist: '助攻',
             rebound: '篮板',
-            rating: '效率',
             steal: '抢断',
             block: '盖帽'
         }
         return labels[metric] || metric
     }
+
+    const winRateValues = trendData?.winRate?.map((rate: number) => parseFloat((rate * 100).toFixed(3))) || []
+    const minWinRate = Math.min(...winRateValues)
+    const maxWinRate = Math.max(...winRateValues)
+    const yMin = Math.max(0, minWinRate - 10)
+    const yMax = Math.min(100, maxWinRate + 10)
 
     return (
         <div className="space-y-6 w-full min-w-0">
@@ -78,25 +95,52 @@ export default function PlayerPerformanceTrendInsight() {
                 <p className="text-sm text-gray-600">按日期展示各球员的数据变化，胜率为球队整体表现</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 min-w-0">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                    <div className="text-xs text-gray-600 mb-1">平均胜率</div>
-                    <div className="text-2xl font-bold text-blue-600">{winRateStats.avg}%</div>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-                    <div className="text-xs text-gray-600 mb-1">最高胜率</div>
-                    <div className="text-2xl font-bold text-green-600">{winRateStats.max.toFixed(0)}%</div>
-                </div>
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                    <div className="text-xs text-gray-600 mb-1">最低胜率</div>
-                    <div className="text-2xl font-bold text-purple-600">{winRateStats.min.toFixed(0)}%</div>
+            {/* 胜率趋势 */}
+            <div className="bg-white rounded-lg border p-4 w-full min-w-0">
+                <h4 className="font-semibold text-gray-900 mb-4">胜率趋势</h4>
+                <div className="w-full min-w-0" style={{ height: 'clamp(250px, 40vw, 320px)' }}>
+                    <Line
+                        key={`chart-2-${resizeKey}`}
+                        data={{
+                            labels: trendData?.dates || [],
+                            datasets: [{
+                                label: '胜率',
+                                data: winRateValues,
+                                borderColor: '#3b82f6',
+                                backgroundColor: '#3b82f620',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            }]
+                        }}
+                        options={{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom' },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context: any) => context.parsed.y.toFixed(3) + '%'
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: { beginAtZero: false, min: yMin, max: yMax }
+                            }
+                        }}
+                        plugins={[{
+                            id: 'drawLabels',
+                            afterDatasetsDraw: drawLabels
+                        }]}
+                    />
                 </div>
             </div>
 
             {/* 指标选择按钮 */}
             <div className="bg-white rounded-lg border p-4 w-full min-w-0">
                 <div className="mb-4 flex gap-2 flex-wrap">
-                    {['score', 'assist', 'rebound', 'rating', 'steal', 'block'].map(metric => (
+                    {['rating', 'score', 'assist', 'rebound', 'steal', 'block'].map(metric => (
                         <button
                             key={metric}
                             onClick={() => setSelectedMetric(metric)}
@@ -116,10 +160,10 @@ export default function PlayerPerformanceTrendInsight() {
                     <Line
                         key={`chart-1-${resizeKey}`}
                         data={{
-                            labels: trendData?.dates?.map((date: string) => date.split('-')[2]) || [],
+                            labels: trendData?.dates || [],
                             datasets: playerNames.map((playerName, playerIdx) => ({
                                 label: playerName,
-                                data: trendData?.playerMetrics[playerName][selectedMetric] || [],
+                                data: trendData?.playerMetrics[playerName][selectedMetric]?.map((v: number) => parseFloat(v.toFixed(1))) || [],
                                 borderColor: COLORS[playerIdx % COLORS.length],
                                 backgroundColor: COLORS[playerIdx % COLORS.length] + '20',
                                 tension: 0.4,
@@ -136,39 +180,6 @@ export default function PlayerPerformanceTrendInsight() {
                             },
                             scales: {
                                 y: { beginAtZero: true }
-                            }
-                        }}
-                    />
-                </div>
-            </div>
-
-            {/* 胜率趋势 */}
-            <div className="bg-white rounded-lg border p-4 w-full min-w-0">
-                <h4 className="font-semibold text-gray-900 mb-4">胜率趋势</h4>
-                <div className="w-full min-w-0" style={{ height: 'clamp(250px, 40vw, 320px)' }}>
-                    <Line
-                        key={`chart-2-${resizeKey}`}
-                        data={{
-                            labels: trendData?.dates?.map((date: string) => date.split('-')[2]) || [],
-                            datasets: [{
-                                label: '胜率',
-                                data: trendData?.winRate?.map((rate: number) => (rate * 100).toFixed(1)) || [],
-                                borderColor: '#3b82f6',
-                                backgroundColor: '#3b82f620',
-                                tension: 0.4,
-                                fill: true,
-                                pointRadius: 4,
-                                pointHoverRadius: 6
-                            }]
-                        }}
-                        options={{
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { position: 'bottom' }
-                            },
-                            scales: {
-                                y: { beginAtZero: true, max: 100 }
                             }
                         }}
                     />
