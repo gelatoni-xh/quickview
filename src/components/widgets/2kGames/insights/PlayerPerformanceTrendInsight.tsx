@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useState } from 'react'
-import { getMatchGameTrend } from '../../../services/matchGameApi'
+import { getMatchGameTrend } from '../../../../services/matchGameApi'
 
 export default function PlayerPerformanceTrendInsight() {
     const [trendData, setTrendData] = useState<any>(null)
@@ -13,8 +13,8 @@ export default function PlayerPerformanceTrendInsight() {
                     excludeRobot: true,
                     dimension: 'PLAYER'
                 })
-                if (response.data) {
-                    setTrendData(response.data)
+                if (response) {
+                    setTrendData(response)
                 }
             } catch (error) {
                 console.error('Failed to fetch trend data:', error)
