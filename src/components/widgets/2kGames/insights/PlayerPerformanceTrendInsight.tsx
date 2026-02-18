@@ -71,19 +71,6 @@ export default function PlayerPerformanceTrendInsight() {
         return labels[metric] || metric
     }
 
-    const getMaxValue = () => {
-        if (!trendData?.playerMetrics) return 1
-        let max = 0
-        Object.values(trendData.playerMetrics).forEach((player: any) => {
-            const values = player[selectedMetric] || []
-            const playerMax = Math.max(...values)
-            if (playerMax > max) max = playerMax
-        })
-        return max || 1
-    }
-
-    const maxValue = getMaxValue()
-
     return (
         <div className="space-y-6 w-full min-w-0">
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg p-4 border border-blue-200">
