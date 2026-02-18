@@ -13,7 +13,7 @@ const drawLabels = (chart: any) => {
     const xScale = chart.scales.x
     const yScale = chart.scales.y
 
-    datasets.forEach((dataset: any, datasetIndex: number) => {
+    datasets.forEach((dataset: any) => {
         dataset.data.forEach((value: number, index: number) => {
             if (value === null || value === undefined) return
             const x = xScale.getPixelForValue(index)
