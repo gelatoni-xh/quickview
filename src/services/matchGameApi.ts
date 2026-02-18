@@ -50,14 +50,16 @@ export interface MatchGameTrendRequest {
 
 export interface MatchGameTrendResponse {
     dates: string[]
-    metrics: {
-        winRate: number[]
-        rating: number[]
-        score: number[]
-        rebound: number[]
-        assist: number[]
-        steal: number[]
-        block: number[]
+    winRate: number[]
+    playerMetrics: {
+        [playerName: string]: {
+            rating: number[]
+            score: number[]
+            rebound: number[]
+            assist: number[]
+            steal: number[]
+            block: number[]
+        }
     }
 }
 
