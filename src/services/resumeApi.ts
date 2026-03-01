@@ -1,6 +1,5 @@
+import { apiGet } from '../utils/api';
 import type { ResumeDTO } from '../types/resume';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 /**
  * 简历API服务
@@ -13,18 +12,7 @@ export class ResumeApiService {
    */
   static async getResumeList(): Promise<ResumeDTO[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/resume/list`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
+      const result = await apiGet<{success: boolean, data: ResumeDTO[], message?: string}>('/api/resume/list');
       
       if (result.success) {
         return result.data || [];
