@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useUsers } from '../hooks/useUsers'
 import { useRoles } from '../hooks/useRoles'
 import { usePermissions } from '../hooks/usePermissions'
@@ -38,6 +38,19 @@ export default function UserPermissionMgmt() {
 
     const loading = usersLoading || rolesLoading || permissionsLoading
     const error = usersError || rolesError || permissionsError
+
+    // 当角色权限数据加载完成后，自动将角色的现有权限加载到selectedPermissionIds中
+    useEffect(() => {
+        if (rolePermissionCodes && permissions && selectedRole) {
+            const currentPermissionIds = permissions
+                .filter(p => rolePermissionCodes.includes(p.permissionCode))
+                .map(p => p.id)
+            setSelectedPermissionIds(currentPermissionIds)
+        } else if (!selectedRole) {
+            // 如果没有选择角色，清空选择的权限
+            setSelectedPermissionIds([])
+        }
+    }, [rolePermissionCodes, permissions, selectedRole])
 
     const tabs = useMemo(() => {
         return [
@@ -316,7 +329,7 @@ export default function UserPermissionMgmt() {
                                 <label key={p.id} className="flex items-center gap-2 py-1 text-sm">
                                     <input
                                         type="checkbox"
-                                        checked={selectedPermissionIds.includes(p.id) || rolePermissionCodes.includes(p.permissionCode)}
+                                        checked={selectedPermissionIds.includes(p.id)}
                                         onChange={() => togglePermissionId(p.id)}
                                         disabled={!selectedRole || assignRolePermissionsLoading}
                                     />
