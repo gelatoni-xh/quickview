@@ -14,5 +14,7 @@ export const PERMISSIONS = {
     ACTIVITY: 'PERM_ACTIVITY',
     /** 比赛权限（用于比赛相关的操作） */
     MATCH: 'PERM_MATCH',
+    /** 简历权限（用于简历相关的操作） */
+    RESUME: 'PERM_RESUME',
     USER_PERMISSION_MGMT: 'PERM_USER_PERMISSION_MGMT',
 } as const

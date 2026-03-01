@@ -52,6 +52,15 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 >
                     Dashboard
                 </Link>
+                {hasPermission(PERMISSIONS.RESUME) && (
+                    <Link
+                        to="/resume"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        简历
+                    </Link>
+                )}
                 {/* 只有有权限的用户才能看到Activity Log链接 */}
                 {hasPermission(PERMISSIONS.ACTIVITY) && (
                     <Link 

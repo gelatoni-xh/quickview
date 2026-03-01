@@ -27,10 +27,7 @@ function AppContent() {
     return (
         <AuthProvider>
             <Routes>
-                {/* 简历页面 - 独立布局，无侧边栏和头部 */}
-                <Route path="/resume" element={<Resume />} />
-                
-                {/* 其他页面 - 标准布局 */}
+                {/* 所有页面 - 标准布局 */}
                 <Route path="*" element={
                     <div className="h-screen flex bg-gray-100">
                         {/* 侧边导航栏 - 移动端默认隐藏，点击按钮展开 */}
@@ -45,6 +42,7 @@ function AppContent() {
                                 <Route path="/activity-log" element={<ActivityLog />} />
                                 <Route path="/2k-games" element={<_2KGames />} />
                                 <Route path="/user-permission-mgmt" element={<UserPermissionMgmt />} />
+                                <Route path="/resume" element={<Resume />} />
                             </Routes>
                         </div>
                     </div>
