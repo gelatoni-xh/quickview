@@ -18,6 +18,7 @@ import Dashboard from './pages/Dashboard.tsx'
 import ActivityLog from './pages/ActivityLog.tsx'
 import UserPermissionMgmt from './pages/UserPermissionMgmt.tsx'
 import _2KGames from './pages/2KGames.tsx'
+import Resume from './pages/Resume.tsx'
 
 function AppContent() {
     // 控制侧边栏的显示/隐藏状态
@@ -25,22 +26,30 @@ function AppContent() {
 
     return (
         <AuthProvider>
-            <div className="h-screen flex bg-gray-100">
-                {/* 侧边导航栏 - 移动端默认隐藏，点击按钮展开 */}
-                <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            <Routes>
+                {/* 简历页面 - 独立布局，无侧边栏和头部 */}
+                <Route path="/resume" element={<Resume />} />
+                
+                {/* 其他页面 - 标准布局 */}
+                <Route path="*" element={
+                    <div className="h-screen flex bg-gray-100">
+                        {/* 侧边导航栏 - 移动端默认隐藏，点击按钮展开 */}
+                        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-                {/* 主内容区域 */}
-                <div className="flex flex-col flex-1">
-                    <Header setSidebarOpen={setSidebarOpen} />
-                    <Routes>
-                        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/activity-log" element={<ActivityLog />} />
-                        <Route path="/2k-games" element={<_2KGames />} />
-                        <Route path="/user-permission-mgmt" element={<UserPermissionMgmt />} />
-                    </Routes>
-                </div>
-            </div>
+                        {/* 主内容区域 */}
+                        <div className="flex flex-col flex-1">
+                            <Header setSidebarOpen={setSidebarOpen} />
+                            <Routes>
+                                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                                <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/activity-log" element={<ActivityLog />} />
+                                <Route path="/2k-games" element={<_2KGames />} />
+                                <Route path="/user-permission-mgmt" element={<UserPermissionMgmt />} />
+                            </Routes>
+                        </div>
+                    </div>
+                } />
+            </Routes>
         </AuthProvider>
     )
 }
