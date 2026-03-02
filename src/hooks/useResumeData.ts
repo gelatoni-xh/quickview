@@ -8,6 +8,7 @@ import type { ResumeDTO, ResumeData } from '../types/resume';
 export const useResumeData = () => {
   const [resumeList, setResumeList] = useState<ResumeDTO[]>([]);
   const [currentResume, setCurrentResume] = useState<ResumeData | null>(null);
+  const [currentResumeDTO, setCurrentResumeDTO] = useState<ResumeDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,6 +23,7 @@ export const useResumeData = () => {
       // 如果有简历数据，解析最新版本的简历
       if (list.length > 0) {
         const latestResume = list[0]; // 已按版本号倒序排列
+        setCurrentResumeDTO(latestResume);
         try {
           const resumeData = JSON.parse(latestResume.resumeData) as ResumeData;
           setCurrentResume(resumeData);
@@ -31,6 +33,7 @@ export const useResumeData = () => {
         }
       } else {
         setCurrentResume(null);
+        setCurrentResumeDTO(null);
       }
     } catch (err) {
       console.error('获取简历数据失败:', err);
@@ -44,6 +47,7 @@ export const useResumeData = () => {
   const switchToVersion = (version: number) => {
     const targetResume = resumeList.find(resume => resume.version === version);
     if (targetResume) {
+      setCurrentResumeDTO(targetResume);
       try {
         const resumeData = JSON.parse(targetResume.resumeData) as ResumeData;
         setCurrentResume(resumeData);
@@ -76,6 +80,7 @@ export const useResumeData = () => {
   return {
     resumeList,
     currentResume,
+    currentResumeDTO,
     loading,
     error,
     fetchResumeList,

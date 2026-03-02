@@ -53,6 +53,7 @@ export interface ResumeDTO {
   version: number;
   name: string;
   resumeData: string; // JSON字符串
+  changelog?: string; // 版本变更点（支持Markdown格式）
   createTime: string;
   updateTime: string;
 }

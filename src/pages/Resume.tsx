@@ -12,13 +12,16 @@ import ResumeHeader from '../components/resume/ResumeHeader';
 import EducationSection from '../components/resume/EducationSection';
 import WorkSection from '../components/resume/WorkSection';
 import SkillsSection from '../components/resume/SkillsSection';
+import ChangelogModal from '../components/resume/ChangelogModal';
 
 export default function Resume() {
   const [singlePage, setSinglePage] = useState(false);
+  const [showChangelogModal, setShowChangelogModal] = useState(false);
   
   // 从后端获取简历数据
   const {
     currentResume,
+    currentResumeDTO,
     loading,
     error,
     getCurrentVersion,
@@ -120,6 +123,17 @@ export default function Resume() {
                 <span className="text-xs text-gray-500">
                   (共 {availableVersions.length} 个版本)
                 </span>
+              )}
+              
+              {/* 变更点按钮 */}
+              {currentResumeDTO?.changelog && (
+                <button
+                  onClick={() => setShowChangelogModal(true)}
+                  className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                  title="查看版本变更点"
+                >
+                  📝 变更点
+                </button>
               )}
             </div>
           </div>
@@ -266,6 +280,14 @@ export default function Resume() {
           ` : ''}
         }
       `}</style>
+
+      {/* 变更点弹窗 */}
+      <ChangelogModal
+        isOpen={showChangelogModal}
+        onClose={() => setShowChangelogModal(false)}
+        version={currentVersion || 0}
+        changelog={currentResumeDTO?.changelog}
+      />
     </div>
   );
 }
