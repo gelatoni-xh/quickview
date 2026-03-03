@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeSlug from 'rehype-slug';
+import rehypeRaw from 'rehype-raw';
+import 'highlight.js/styles/github-dark.css';
 import { getContent } from '../services/blogApi';
 import type { BlogContent } from '../services/blogApi';
 
@@ -88,8 +93,13 @@ export default function BlogDetail() {
             <div className="text-sm text-gray-500">分类: {content.category}</div>
           </div>
           
-          <div className="prose prose-slate max-w-none">
-            <ReactMarkdown>{content.content}</ReactMarkdown>
+          <div className="prose prose-slate max-w-none prose-pre:bg-gray-900 prose-pre:text-gray-100">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeRaw, rehypeSlug, rehypeHighlight]}
+            >
+              {content.content}
+            </ReactMarkdown>
           </div>
         </div>
       </div>
