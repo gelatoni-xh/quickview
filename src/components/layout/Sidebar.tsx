@@ -27,7 +27,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
     return (
         <aside
-            className={`w-56 bg-white border-r fixed inset-y-0 left-0 z-40 transform transition-transform duration-200
+            className={`w-56 bg-white border-r fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 print:hidden
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
         >

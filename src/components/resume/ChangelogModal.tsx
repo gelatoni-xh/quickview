@@ -21,7 +21,7 @@ export default function ChangelogModal({ isOpen, onClose, version, changelog }: 
         .replace(/^### (.*$)/gm, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
         .replace(/^## (.*$)/gm, '<h2 class="text-xl font-semibold mt-4 mb-2">$1</h2>')
         .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>')
-        .replace(/^- (.*$)/gm, '<li class="ml-4">• $1</li>')
+        .replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>')

@@ -12,15 +12,15 @@ interface ResumeHeaderProps {
 
 export default function ResumeHeader({ data }: ResumeHeaderProps) {
   return (
-    <header className="mb-8 pb-6">
+    <header className="mb-4 pb-3">
       <div className="flex justify-between items-start gap-6">
         {/* 左侧：个人信息 */}
         <div className="flex-1">
           {/* 姓名 */}
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">{data.name}</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">{data.name}</h1>
           
           {/* 联系信息 - 每项一行 */}
-          <div className="flex flex-col gap-1 text-sm text-gray-600">
+          <div className="flex flex-col gap-0.5 text-sm text-gray-600">
             <div className="flex items-center gap-1">
               <span>📱</span>
               <span>{data.phone}</span>

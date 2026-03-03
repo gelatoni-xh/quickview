@@ -40,7 +40,7 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
 
     return (
         <>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 print:hidden">
                 {/* 左侧：侧边栏开关按钮 */}
                 <button
                     onClick={() => setSidebarOpen(true)}

@@ -15,9 +15,9 @@ export default function EducationSection({ data }: EducationSectionProps) {
   return (
     <ResumeSection title="教育经历">
       {data.map((edu, index) => (
-        <div key={index} className="mb-4">
+        <div key={index} className="mb-2">
           {/* 学校和时间 */}
-          <div className="flex justify-between items-start mb-1">
+          <div className="flex justify-between items-start mb-0.5">
             <div>
               <h3 className="text-base font-semibold text-gray-900">{edu.school}</h3>
               <p className="text-sm font-semibold text-gray-600">
@@ -32,7 +32,7 @@ export default function EducationSection({ data }: EducationSectionProps) {
           
           {/* 亮点 */}
           {edu.highlights.length > 0 && (
-            <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+            <ul className="list-disc list-inside space-y-0.5 text-sm text-gray-700">
               {edu.highlights.map((highlight, idx) => (
                 <li key={idx}>{highlight}</li>
               ))}
