@@ -45,13 +45,22 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
             {/* 导航菜单 */}
             <nav className="px-4 space-y-2">
-                <Link 
-                    to="/dashboard" 
+                <Link
+                    to="/dashboard"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
                     onClick={() => setSidebarOpen(false)}
                 >
                     Dashboard
                 </Link>
+                {hasPermission(PERMISSIONS.BLOG_VIEW) && (
+                    <Link
+                        to="/blog"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        博客
+                    </Link>
+                )}
                 {hasPermission(PERMISSIONS.RESUME) && (
                     <Link
                         to="/resume"

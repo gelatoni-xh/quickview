@@ -19,6 +19,8 @@ import ActivityLog from './pages/ActivityLog.tsx'
 import UserPermissionMgmt from './pages/UserPermissionMgmt.tsx'
 import _2KGames from './pages/2KGames.tsx'
 import Resume from './pages/Resume.tsx'
+import Blog from './pages/Blog.tsx'
+import BlogDetail from './pages/BlogDetail.tsx'
 
 function AppContent() {
     // 控制侧边栏的显示/隐藏状态
@@ -39,6 +41,8 @@ function AppContent() {
                             <Routes>
                                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                                 <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/blog" element={<Blog />} />
+                                <Route path="/blog/:category/:title" element={<BlogDetail />} />
                                 <Route path="/activity-log" element={<ActivityLog />} />
                                 <Route path="/2k-games" element={<_2KGames />} />
                                 <Route path="/user-permission-mgmt" element={<UserPermissionMgmt />} />

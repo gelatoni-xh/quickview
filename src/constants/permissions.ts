@@ -16,5 +16,7 @@ export const PERMISSIONS = {
     MATCH: 'PERM_MATCH',
     /** 简历权限（用于简历相关的操作） */
     RESUME: 'PERM_RESUME',
+    /** 博客查看权限 */
+    BLOG_VIEW: 'PERM_BLOG_VIEW',
     USER_PERMISSION_MGMT: 'PERM_USER_PERMISSION_MGMT',
 } as const
