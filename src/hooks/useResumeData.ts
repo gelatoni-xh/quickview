@@ -60,12 +60,7 @@ export const useResumeData = () => {
 
   // 获取当前版本号
   const getCurrentVersion = (): number | null => {
-    if (!currentResume || resumeList.length === 0) return null;
-    
-    // 通过比较数据内容找到当前版本
-    const currentResumeStr = JSON.stringify(currentResume);
-    const matchedResume = resumeList.find(resume => resume.resumeData === currentResumeStr);
-    return matchedResume?.version || null;
+    return currentResumeDTO?.version || null;
   };
 
   // 获取可用版本列表

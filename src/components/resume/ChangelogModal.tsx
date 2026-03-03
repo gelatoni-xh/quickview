@@ -17,16 +17,15 @@ export default function ChangelogModal({ isOpen, onClose, version, changelog }: 
 
   useEffect(() => {
     if (changelog) {
-      // 简单的Markdown渲染：将换行转为<br/>，支持基本格式
       let content = changelog
-        .replace(/\n/g, '<br/>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 粗体
-        .replace(/\*(.*?)\*/g, '<em>$1</em>') // 斜体
-        .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>') // 行内代码
-        .replace(/^### (.*$)/gm, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>') // 三级标题
-        .replace(/^## (.*$)/gm, '<h2 class="text-xl font-semibold mt-4 mb-2">$1</h2>') // 二级标题
-        .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>') // 一级标题
-        .replace(/^- (.*$)/gm, '<li class="ml-4">• $1</li>'); // 列表项
+        .replace(/^### (.*$)/gm, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
+        .replace(/^## (.*$)/gm, '<h2 class="text-xl font-semibold mt-4 mb-2">$1</h2>')
+        .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>')
+        .replace(/^- (.*$)/gm, '<li class="ml-4">• $1</li>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>')
+        .replace(/\n/g, '<br/>');
       
       setRenderedContent(content);
     } else {
