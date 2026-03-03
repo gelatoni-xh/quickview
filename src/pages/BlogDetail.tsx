@@ -5,7 +5,8 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import rehypeRaw from 'rehype-raw';
-import 'highlight.js/styles/github-dark.css';
+import 'github-markdown-css/github-markdown.css';
+import 'highlight.js/styles/github.css';
 import { getContent } from '../services/blogApi';
 import type { BlogContent } from '../services/blogApi';
 
@@ -93,14 +94,14 @@ export default function BlogDetail() {
             <div className="text-sm text-gray-500">分类: {content.category}</div>
           </div>
           
-          <div className="prose prose-slate max-w-none prose-pre:bg-gray-900 prose-pre:text-gray-100">
+          <article className="markdown-body">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeRaw, rehypeSlug, rehypeHighlight]}
             >
               {content.content}
             </ReactMarkdown>
-          </div>
+          </article>
         </div>
       </div>
     </main>
