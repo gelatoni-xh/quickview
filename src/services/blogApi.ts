@@ -17,7 +17,7 @@ interface ApiResponse<T> {
   message?: string;
 }
 
-const KNOWLEDGE_BASE_PATH = '/srv/knowledge_base';
+const KNOWLEDGE_BASE_PATH = '/knowledge_base';
 const USE_DIRECT_ACCESS = true;
 
 async function fetchDirectly<T>(path: string): Promise<ApiResponse<T>> {
