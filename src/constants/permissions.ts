@@ -4,6 +4,8 @@
  * 定义系统中所有权限编码的常量，用于权限检查。
  */
 export const PERMISSIONS = {
+    /** Dashboard 权限 */
+    DASHBOARD: 'PERM_DASHBOARD',
     /** 查看公告权限 */
     NOTICE_VIEW: 'PERM_NOTICE_VIEW',
     /** 创建公告权限 */

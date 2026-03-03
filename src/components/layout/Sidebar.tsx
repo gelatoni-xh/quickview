@@ -33,7 +33,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
         >
             {/* 侧边栏头部：Logo 和关闭按钮 */}
             <div className="flex items-center justify-between p-4 border-b">
-                <div className="font-bold text-lg">QuickView</div>
+                <div className="font-bold text-lg">Gelatoni</div>
                 <button
                     onClick={() => setSidebarOpen(false)}
                     className="text-gray-500 hover:text-black text-lg leading-none"
@@ -45,13 +45,15 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
             {/* 导航菜单 */}
             <nav className="px-4 space-y-2">
-                <Link
-                    to="/dashboard"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                    onClick={() => setSidebarOpen(false)}
-                >
-                    Dashboard
-                </Link>
+                {hasPermission(PERMISSIONS.DASHBOARD) && (
+                    <Link
+                        to="/dashboard"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        Dashboard
+                    </Link>
+                )}
                 {hasPermission(PERMISSIONS.BLOG_VIEW) && (
                     <Link
                         to="/blog"

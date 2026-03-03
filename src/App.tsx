@@ -39,7 +39,7 @@ function AppContent() {
                         <div className="flex flex-col flex-1">
                             <Header setSidebarOpen={setSidebarOpen} />
                             <Routes>
-                                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                                <Route path="/" element={<Navigate to="/blog" replace />} />
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/blog" element={<Blog />} />
                                 <Route path="/blog/:category/:title" element={<BlogDetail />} />
