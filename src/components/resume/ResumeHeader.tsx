@@ -33,6 +33,10 @@ export default function ResumeHeader({ data }: ResumeHeaderProps) {
               <span>📍</span>
               <span>{data.location}</span>
             </div>
+            <div className="flex items-center gap-1">
+              <span>🌐</span>
+              <span>{data.website}</span>
+            </div>
           </div>
         </div>
 
