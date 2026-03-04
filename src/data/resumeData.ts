@@ -10,6 +10,7 @@ export const resumeData: ResumeData = {
   personal: {
     name: '徐涣',
     phone: '18321289735',
+    website: 'https://gelatoni.uk',
     email: 'cs_xuhuan@163.com',
     location: '浙江-嘉兴 | 上海、杭州',
     position: '后端开发工程师'
