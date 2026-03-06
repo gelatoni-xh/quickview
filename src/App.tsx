@@ -21,6 +21,7 @@ import _2KGames from './pages/2KGames.tsx'
 import Resume from './pages/Resume.tsx'
 import Blog from './pages/Blog.tsx'
 import BlogDetail from './pages/BlogDetail.tsx'
+import AiChat from './pages/AiChat.tsx'
 
 function AppContent() {
     // 控制侧边栏的显示/隐藏状态
@@ -47,6 +48,7 @@ function AppContent() {
                                 <Route path="/2k-games" element={<_2KGames />} />
                                 <Route path="/user-permission-mgmt" element={<UserPermissionMgmt />} />
                                 <Route path="/resume" element={<Resume />} />
+                                <Route path="/ai-chat" element={<AiChat />} />
                             </Routes>
                         </div>
                     </div>

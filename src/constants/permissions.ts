@@ -21,4 +21,5 @@ export const PERMISSIONS = {
     /** 博客查看权限 */
     BLOG_VIEW: 'PERM_BLOG_VIEW',
     USER_PERMISSION_MGMT: 'PERM_USER_PERMISSION_MGMT',
+    AI_CHAT: 'PERM_AI_CHAT',
 } as const

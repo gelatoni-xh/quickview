@@ -91,6 +91,15 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                         2K Games
                     </Link>
                 )}
+                {hasPermission(PERMISSIONS.AI_CHAT) && (
+                    <Link
+                        to="/ai-chat"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        onClick={() => setSidebarOpen(false)}
+                    >
+                        AI Chat
+                    </Link>
+                )}
                 {hasPermission(PERMISSIONS.USER_PERMISSION_MGMT) && (
                     <Link
                         to="/user-permission-mgmt"
