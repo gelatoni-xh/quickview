@@ -83,9 +83,9 @@ export default function Resume() {
   const availableVersions = getAvailableVersions();
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 print:bg-white print:py-0">
+    <div className="flex-1 flex flex-col bg-gray-50 py-8 print:bg-white print:py-0">
       {/* 简历容器 - A4 纸张尺寸 */}
-      <div className="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none p-12 print:p-8">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg print:shadow-none p-12 print:p-8 w-full">
         {/* 控制面板 - 仅在屏幕显示 */}
         <div className="mb-6 print:hidden flex justify-between items-center gap-4 p-4 bg-gray-100 rounded">
           <div className="flex items-center gap-4">
