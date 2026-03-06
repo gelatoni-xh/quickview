@@ -32,7 +32,7 @@ function AppContent() {
             <Routes>
                 {/* 所有页面 - 标准布局 */}
                 <Route path="*" element={
-                    <div className="h-screen flex bg-gray-100">
+                    <div className="h-screen flex bg-cyber-bg">
                         {/* 侧边导航栏 - 移动端默认隐藏，点击按钮展开 */}
                         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 

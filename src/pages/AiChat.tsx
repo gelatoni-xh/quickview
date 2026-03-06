@@ -1,13 +1,20 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
+import { useAuth } from '../hooks/useAuth'
+import { PERMISSIONS } from '../constants/permissions'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug'
+import rehypeRaw from 'rehype-raw'
+import 'github-markdown-css/github-markdown.css'
+import 'highlight.js/styles/github.css'
 import { sendChat } from '../services/chatApi'
 import { getContent } from '../services/blogApi'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 type Tab = 'chat' | 'todo'
 
-function ChatTab() {
+function ChatTab({ disabled }: { disabled: boolean }) {
     const [messages, setMessages] = useState<Message[]>([])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
@@ -21,7 +28,7 @@ function ChatTab() {
 
     const handleSend = async () => {
         const text = input.trim()
-        if (!text || loading) return
+        if (!text || loading || disabled) return
         setInput('')
         setError(null)
         setMessages((prev) => [...prev, { role: 'user', content: text }])
@@ -70,16 +77,16 @@ function ChatTab() {
             <div className="px-6 py-4 border-t bg-white">
                 <div className="flex gap-2">
                     <input
-                        className="flex-1 border rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300"
-                        placeholder="输入消息..."
+                        className="flex-1 border rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                        placeholder={disabled ? '暂无权限' : '输入消息...'}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                        disabled={loading}
+                        disabled={loading || disabled}
                     />
                     <button
                         onClick={handleSend}
-                        disabled={loading || !input.trim()}
+                        disabled={loading || !input.trim() || disabled}
                         className="px-4 py-2 bg-blue-600 text-white text-sm rounded-xl disabled:opacity-50 hover:bg-blue-700"
                     >
                         发送
@@ -110,14 +117,20 @@ function TodoTab() {
 
     return (
         <div className="flex-1 overflow-y-auto px-6 py-4">
-            <div className="prose prose-sm max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{content!}</ReactMarkdown>
-            </div>
+            <article className="markdown-body">
+                <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw, rehypeSlug, rehypeHighlight]}
+                >
+                    {content!}
+                </ReactMarkdown>
+            </article>
         </div>
     )
 }
 
 export default function AiChat() {
+    const { hasPermission } = useAuth()
     const [tab, setTab] = useState<Tab>('chat')
 
     const tabs: { key: Tab; label: string }[] = [
@@ -145,7 +158,7 @@ export default function AiChat() {
                     ))}
                 </div>
             </div>
-            {tab === 'chat' ? <ChatTab /> : <TodoTab />}
+            {tab === 'chat' ? <ChatTab disabled={!hasPermission(PERMISSIONS.AI_CHAT)} /> : <TodoTab />}
         </main>
     )
 }

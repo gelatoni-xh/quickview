@@ -40,11 +40,11 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
 
     return (
         <>
-            <div className="flex items-center justify-between mb-4 print:hidden">
+            <div className="flex items-center justify-between px-4 py-3 mb-0 border-b border-cyber-border bg-cyber-surface print:hidden">
                 {/* 左侧：侧边栏开关按钮 */}
                 <button
                     onClick={() => setSidebarOpen(true)}
-                    className="inline-flex items-center px-3 py-2 text-sm bg-white border rounded shadow-sm hover:bg-gray-50"
+                    className="inline-flex items-center px-3 py-1.5 text-sm bg-transparent border border-cyber-border text-cyber-muted rounded hover:text-cyber-accent hover:border-cyber-accent transition-colors"
                     aria-label="打开侧边栏"
                 >
                     ☰
@@ -54,20 +54,19 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
                 <div className="flex items-center gap-3">
                     {isAuthenticated && userInfo?.user ? (
                         <>
-                            {/* 显示用户昵称和第一个角色 */}
                             <div className="flex items-center gap-2 text-sm">
-                                <span className="text-gray-700">
+                                <span className="text-cyber-text">
                                     {userInfo.user.nickname || userInfo.user.username}
                                 </span>
                                 {userInfo.roleCodes.length > 0 && (
-                                    <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">
+                                    <span className="px-2 py-0.5 text-xs border border-cyber-accent/50 text-cyber-accent rounded">
                                         {userInfo.roleCodes[0]}
                                     </span>
                                 )}
                             </div>
                             <button
                                 onClick={handleLogout}
-                                className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                                className="px-3 py-1 text-sm text-cyber-muted hover:text-cyber-accent transition-colors"
                             >
                                 登出
                             </button>
@@ -75,7 +74,7 @@ export default function Header({ setSidebarOpen }: HeaderProps) {
                     ) : (
                         <button
                             onClick={() => setShowLoginModal(true)}
-                            className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                            className="px-4 py-1.5 text-sm border border-cyber-accent text-cyber-accent rounded hover:bg-cyber-accent hover:text-cyber-bg transition-colors"
                         >
                             登录
                         </button>

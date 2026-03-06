@@ -27,16 +27,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
     return (
         <aside
-            className={`w-56 bg-white border-r fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 print:hidden
+            className={`w-56 bg-cyber-surface border-r border-cyber-border fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 print:hidden shadow-cyber
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
         >
             {/* 侧边栏头部：Logo 和关闭按钮 */}
-            <div className="flex items-center justify-between p-4 border-b">
-                <div className="font-bold text-lg">Gelatoni</div>
+            <div className="flex items-center justify-between p-4 border-b border-cyber-border">
+                <div className="font-bold text-lg text-cyber-accent tracking-widest">Gelatoni</div>
                 <button
                     onClick={() => setSidebarOpen(false)}
-                    className="text-gray-500 hover:text-black text-lg leading-none"
+                    className="text-cyber-muted hover:text-cyber-accent text-lg leading-none transition-colors"
                     aria-label="Close sidebar"
                 >
                     ×
@@ -44,11 +44,11 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             </div>
 
             {/* 导航菜单 */}
-            <nav className="px-4 space-y-2">
+            <nav className="px-4 py-2 space-y-1">
                 {hasPermission(PERMISSIONS.DASHBOARD) && (
                     <Link
                         to="/dashboard"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         Dashboard
@@ -57,7 +57,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.BLOG_VIEW) && (
                     <Link
                         to="/blog"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         博客
@@ -66,17 +66,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.RESUME) && (
                     <Link
                         to="/resume"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         简历
                     </Link>
                 )}
-                {/* 只有有权限的用户才能看到Activity Log链接 */}
                 {hasPermission(PERMISSIONS.ACTIVITY) && (
-                    <Link 
-                        to="/activity-log" 
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    <Link
+                        to="/activity-log"
+                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         Activity Log
@@ -85,29 +84,23 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.MATCH) && (
                     <Link
                         to="/2k-games"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         2K Games
                     </Link>
                 )}
-                {hasPermission(PERMISSIONS.AI_CHAT) ? (
-                    <Link
-                        to="/ai-chat"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-                        onClick={() => setSidebarOpen(false)}
-                    >
-                        LLM / Agent
-                    </Link>
-                ) : (
-                    <span className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 cursor-not-allowed select-none">
-                        LLM / Agent
-                    </span>
-                )}
+                <Link
+                    to="/ai-chat"
+                    className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                    onClick={() => setSidebarOpen(false)}
+                >
+                    LLM / Agent
+                </Link>
                 {hasPermission(PERMISSIONS.USER_PERMISSION_MGMT) && (
                     <Link
                         to="/user-permission-mgmt"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         权限管理
