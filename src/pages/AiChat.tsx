@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { sendChat } from '../services/chatApi'
 
 type Message = { role: 'user' | 'assistant'; content: string }
@@ -8,6 +8,7 @@ export default function AiChat() {
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const sessionId = useMemo(() => crypto.randomUUID(), [])
     const bottomRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -24,7 +25,7 @@ export default function AiChat() {
         setLoading(true)
 
         try {
-            const res = await sendChat(text)
+            const res = await sendChat(text, sessionId)
             if (res.success && res.data?.answer) {
                 setMessages((prev) => [...prev, { role: 'assistant', content: res.data.answer }])
             } else {
