@@ -1,9 +1,13 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { sendChat } from '../services/chatApi'
+import { getContent } from '../services/blogApi'
 
 type Message = { role: 'user' | 'assistant'; content: string }
+type Tab = 'chat' | 'todo'
 
-export default function AiChat() {
+function ChatTab() {
     const [messages, setMessages] = useState<Message[]>([])
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
@@ -18,12 +22,10 @@ export default function AiChat() {
     const handleSend = async () => {
         const text = input.trim()
         if (!text || loading) return
-
         setInput('')
         setError(null)
         setMessages((prev) => [...prev, { role: 'user', content: text }])
         setLoading(true)
-
         try {
             const res = await sendChat(text, sessionId)
             if (res.success && res.data?.answer) {
@@ -39,24 +41,18 @@ export default function AiChat() {
     }
 
     return (
-        <main className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-white to-sky-50">
-            <div className="px-6 py-4 border-b bg-white">
-                <h1 className="text-2xl font-semibold text-gray-900">AI Chat</h1>
-            </div>
-
+        <>
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
                 {messages.length === 0 && (
                     <div className="text-center text-gray-400 text-sm mt-16">发送消息开始对话</div>
                 )}
                 {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div
-                            className={`max-w-[70%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap ${
-                                msg.role === 'user'
-                                    ? 'bg-blue-600 text-white rounded-br-sm'
-                                    : 'bg-white border shadow-sm text-gray-800 rounded-bl-sm'
-                            }`}
-                        >
+                        <div className={`max-w-[70%] px-4 py-2 rounded-2xl text-sm whitespace-pre-wrap ${
+                            msg.role === 'user'
+                                ? 'bg-blue-600 text-white rounded-br-sm'
+                                : 'bg-white border shadow-sm text-gray-800 rounded-bl-sm'
+                        }`}>
                             {msg.content}
                         </div>
                     </div>
@@ -71,7 +67,6 @@ export default function AiChat() {
                 {error && <div className="text-center text-red-500 text-sm">{error}</div>}
                 <div ref={bottomRef} />
             </div>
-
             <div className="px-6 py-4 border-t bg-white">
                 <div className="flex gap-2">
                     <input
@@ -91,6 +86,66 @@ export default function AiChat() {
                     </button>
                 </div>
             </div>
+        </>
+    )
+}
+
+function TodoTab() {
+    const [content, setContent] = useState<string | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
+    useEffect(() => {
+        getContent('AI架构', 'AI工作流闭环TODO')
+            .then((res) => {
+                if (res.success && res.data?.content) setContent(res.data.content)
+                else setError('加载失败')
+            })
+            .catch(() => setError('加载失败'))
+            .finally(() => setLoading(false))
+    }, [])
+
+    if (loading) return <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">加载中...</div>
+    if (error) return <div className="flex-1 flex items-center justify-center text-red-500 text-sm">{error}</div>
+
+    return (
+        <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div className="prose prose-sm max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{content!}</ReactMarkdown>
+            </div>
+        </div>
+    )
+}
+
+export default function AiChat() {
+    const [tab, setTab] = useState<Tab>('chat')
+
+    const tabs: { key: Tab; label: string }[] = [
+        { key: 'chat', label: 'AI Chat' },
+        { key: 'todo', label: 'AI 工作流 TODO' },
+    ]
+
+    return (
+        <main className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-white to-sky-50">
+            <div className="px-6 py-4 border-b bg-white">
+                <h1 className="text-2xl font-semibold text-gray-900 mb-3">LLM / Agent</h1>
+                <div className="flex gap-1">
+                    {tabs.map((t) => (
+                        <button
+                            key={t.key}
+                            onClick={() => setTab(t.key)}
+                            className={`px-4 py-1.5 text-sm rounded-lg transition-colors ${
+                                tab === t.key
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-600 hover:bg-gray-100'
+                            }`}
+                        >
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {tab === 'chat' ? <ChatTab /> : <TodoTab />}
         </main>
     )
 }
