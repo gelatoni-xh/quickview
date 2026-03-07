@@ -13,7 +13,7 @@ import { getContent } from '../services/blogApi'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 type Tab = 'chat' | 'todo'
-type Session = { id: string; sessionUuid: string; name: string; messages: Message[] }
+type Session = { id: string; sessionUuid: string; name: string; messages: Message[]; roundCount?: number; modifiedTime?: string }
 
 function ChatTab({ disabled, session, onUpdateSession }: { disabled: boolean; session: Session; onUpdateSession: (messages: Message[]) => void }) {
     const [input, setInput] = useState('')
@@ -148,7 +148,9 @@ export default function AiChat() {
                     id: s.sessionUuid,
                     sessionUuid: s.sessionUuid,
                     name: s.title || `会话 ${s.sessionUuid.substring(0, 8)}`,
-                    messages: []
+                    messages: [],
+                    roundCount: s.roundCount || 0,
+                    modifiedTime: s.modifiedTime
                 }))
                 setSessions(dbSessions)
                 if (dbSessions.length > 0) {
@@ -279,8 +281,9 @@ export default function AiChat() {
                                                 ×
                                             </button>
                                         </div>
-                                        <div className="text-xs text-gray-500 mt-1">
-                                            {session.messages.length} 条消息
+                                        <div className="text-xs text-gray-500 mt-1 space-y-0.5">
+                                            <div>{session.roundCount || 0} 轮回答</div>
+                                            {session.modifiedTime && <div>{new Date(session.modifiedTime).toLocaleString('zh-CN')}</div>}
                                         </div>
                                     </div>
                                 ))}
