@@ -8,10 +8,10 @@ export async function sendChat(message: string, sessionUuid: string) {
 
 export async function getSessions(pageNo: number = 1, pageSize: number = 10) {
     return apiGet<BaseResponse<{
-        records: Array<{ sessionUuid: string; title: string; createTime: string }>
+        list: Array<{ sessionUuid: string; title: string; createTime: string }>
         total: number
-        current: number
-        size: number
+        pageNo: number
+        pageSize: number
     }>>(`/api/chat/sessions?pageNo=${pageNo}&pageSize=${pageSize}`)
 }
 

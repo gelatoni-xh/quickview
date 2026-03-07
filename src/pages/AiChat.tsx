@@ -143,8 +143,8 @@ export default function AiChat() {
     const loadSessionsFromDb = async () => {
         try {
             const res = await getSessions(1, 100)
-            if (res.success && res.data?.records) {
-                const dbSessions: Session[] = res.data.records.map((s: any) => ({
+            if (res.success && res.data?.list && res.data.list.length > 0) {
+                const dbSessions: Session[] = res.data.list.map((s: any) => ({
                     id: s.sessionUuid,
                     sessionUuid: s.sessionUuid,
                     name: s.title || `会话 ${s.sessionUuid.substring(0, 8)}`,
