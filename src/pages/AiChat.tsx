@@ -38,7 +38,7 @@ function ChatTab({ disabled, session, onUpdateSession }: { disabled: boolean; se
             if (res.success && res.data?.answer) {
                 onUpdateSession([...newMessages, { role: 'assistant' as const, content: res.data.answer }])
             } else {
-                setError('请求失败')
+                setError(res.message || '请求失败')
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : String(err))
