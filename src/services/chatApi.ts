@@ -15,6 +15,6 @@ export async function getSessions(pageNo: number = 1, pageSize: number = 10) {
     }>>(`/api/chat/sessions?pageNo=${pageNo}&pageSize=${pageSize}`)
 }
 
-export async function getMessages(sessionId: string) {
-    return apiGet<BaseResponse<Array<{ message: string; answer: string; createTime: string }>>>(`/api/chat/messages?sessionId=${sessionId}`)
+export async function getMessages(sessionUuid: string) {
+    return apiGet<BaseResponse<Array<{ message: string; answer: string; createTime: string }>>>(`/api/chat/messages?sessionUuid=${sessionUuid}`)
 }

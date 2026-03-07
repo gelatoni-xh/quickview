@@ -169,11 +169,10 @@ export default function AiChat() {
         try {
             const res = await getMessages(sessionUuid)
             if (res.success && res.data) {
-                const messages: Message[] = []
-                for (const msg of res.data) {
-                    messages.push({ role: 'user', content: msg.message })
-                    messages.push({ role: 'assistant', content: msg.answer })
-                }
+                const messages: Message[] = res.data.flatMap(msg => [
+                    { role: 'user' as const, content: msg.message },
+                    { role: 'assistant' as const, content: msg.answer }
+                ])
                 setSessions(s => s.map(sess => sess.sessionUuid === sessionUuid ? { ...sess, messages } : sess))
             }
         } catch {
