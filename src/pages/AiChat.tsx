@@ -75,9 +75,9 @@ function ChatTab({ disabled, session, onUpdateSession }: { disabled: boolean; se
                 <div ref={bottomRef} />
             </div>
             <div className="px-6 py-4 border-t bg-white">
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2">
                     <input
-                        className="flex-1 border rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                        className="w-full border rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-300 disabled:bg-gray-50 disabled:cursor-not-allowed"
                         placeholder={disabled ? '暂无权限' : '输入消息...'}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -87,7 +87,7 @@ function ChatTab({ disabled, session, onUpdateSession }: { disabled: boolean; se
                     <button
                         onClick={handleSend}
                         disabled={loading || !input.trim() || disabled}
-                        className="px-4 py-2 bg-blue-600 text-white text-sm rounded-xl disabled:opacity-50 hover:bg-blue-700"
+                        className="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded-xl disabled:opacity-50 hover:bg-blue-700"
                     >
                         发送
                     </button>
