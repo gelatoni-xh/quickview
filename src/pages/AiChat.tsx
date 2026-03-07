@@ -8,12 +8,12 @@ import rehypeSlug from 'rehype-slug'
 import rehypeRaw from 'rehype-raw'
 import 'github-markdown-css/github-markdown.css'
 import 'highlight.js/styles/github.css'
-import { sendChat } from '../services/chatApi'
+import { sendChat, getSessions, getMessages } from '../services/chatApi'
 import { getContent } from '../services/blogApi'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 type Tab = 'chat' | 'todo'
-type Session = { id: string; name: string; messages: Message[] }
+type Session = { id: string; sessionUuid: string; name: string; messages: Message[] }
 
 function ChatTab({ disabled, session, onUpdateSession }: { disabled: boolean; session: Session; onUpdateSession: (messages: Message[]) => void }) {
     const [input, setInput] = useState('')
@@ -34,7 +34,7 @@ function ChatTab({ disabled, session, onUpdateSession }: { disabled: boolean; se
         onUpdateSession(newMessages)
         setLoading(true)
         try {
-            const res = await sendChat(text, session.id)
+            const res = await sendChat(text, session.sessionUuid)
             if (res.success && res.data?.answer) {
                 onUpdateSession([...newMessages, { role: 'assistant' as const, content: res.data.answer }])
             } else {
@@ -134,22 +134,63 @@ export default function AiChat() {
     const [tab, setTab] = useState<Tab>('chat')
     const [sessions, setSessions] = useState<Session[]>([])
     const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
+    const [loadingDb, setLoadingDb] = useState(true)
+
+    useEffect(() => {
+        loadSessionsFromDb()
+    }, [])
+
+    const loadSessionsFromDb = async () => {
+        try {
+            const res = await getSessions(1, 100)
+            if (res.success && res.data?.records) {
+                const dbSessions: Session[] = res.data.records.map((s: any) => ({
+                    id: s.sessionUuid,
+                    sessionUuid: s.sessionUuid,
+                    name: s.title || `会话 ${s.sessionUuid.substring(0, 8)}`,
+                    messages: []
+                }))
+                setSessions(dbSessions)
+                if (dbSessions.length > 0) {
+                    setCurrentSessionId(dbSessions[0].id)
+                    loadMessagesForSession(dbSessions[0].sessionUuid)
+                }
+            } else {
+                createSession()
+            }
+        } catch {
+            createSession()
+        } finally {
+            setLoadingDb(false)
+        }
+    }
+
+    const loadMessagesForSession = async (sessionUuid: string) => {
+        try {
+            const res = await getMessages(sessionUuid)
+            if (res.success && res.data) {
+                const messages: Message[] = []
+                for (const msg of res.data) {
+                    messages.push({ role: 'user', content: msg.message })
+                    messages.push({ role: 'assistant', content: msg.answer })
+                }
+                setSessions(s => s.map(sess => sess.sessionUuid === sessionUuid ? { ...sess, messages } : sess))
+            }
+        } catch {
+            // 加载失败，保持空消息列表
+        }
+    }
 
     const createSession = () => {
         const newSession: Session = {
             id: crypto.randomUUID(),
+            sessionUuid: crypto.randomUUID(),
             name: `会话 ${sessions.length + 1}`,
             messages: [],
         }
         setSessions([...sessions, newSession])
         setCurrentSessionId(newSession.id)
     }
-
-    useEffect(() => {
-        if (sessions.length === 0) {
-            createSession()
-        }
-    }, [])
 
     const currentSession = sessions.find((s) => s.id === currentSessionId)
 
@@ -165,10 +206,22 @@ export default function AiChat() {
         }
     }
 
+    const handleSelectSession = (id: string) => {
+        setCurrentSessionId(id)
+        const session = sessions.find(s => s.id === id)
+        if (session && session.messages.length === 0) {
+            loadMessagesForSession(session.sessionUuid)
+        }
+    }
+
     const tabs: { key: Tab; label: string }[] = [
         { key: 'chat', label: 'AI Chat' },
         { key: 'todo', label: 'AI 工作流 TODO' },
     ]
+
+    if (loadingDb) {
+        return <div className="flex-1 flex items-center justify-center text-gray-400">加载会话中...</div>
+    }
 
     return (
         <main className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-white to-sky-50">
@@ -213,7 +266,7 @@ export default function AiChat() {
                                                 ? 'bg-blue-100 text-blue-900'
                                                 : 'hover:bg-gray-100 text-gray-700'
                                         }`}
-                                        onClick={() => setCurrentSessionId(session.id)}
+                                        onClick={() => handleSelectSession(session.id)}
                                     >
                                         <div className="flex items-center justify-between gap-2">
                                             <span className="text-sm truncate flex-1">{session.name}</span>
