@@ -27,16 +27,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
 
     return (
         <aside
-            className={`w-56 bg-cyber-surface border-r border-cyber-border fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 print:hidden shadow-cyber
+            className={`w-56 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40 transform transition-transform duration-200 print:hidden shadow-md
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
         >
             {/* 侧边栏头部：Logo 和关闭按钮 */}
-            <div className="flex items-center justify-between p-4 border-b border-cyber-border">
-                <div className="font-bold text-lg text-cyber-accent tracking-widest">Gelatoni</div>
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <div className="font-bold text-lg text-gray-800 tracking-widest">Gelatoni</div>
                 <button
                     onClick={() => setSidebarOpen(false)}
-                    className="text-cyber-muted hover:text-cyber-accent text-lg leading-none transition-colors"
+                    className="text-gray-400 hover:text-gray-700 text-lg leading-none transition-colors"
                     aria-label="Close sidebar"
                 >
                     ×
@@ -48,7 +48,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.DASHBOARD) && (
                     <Link
                         to="/dashboard"
-                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                        className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         Dashboard
@@ -57,7 +57,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.BLOG_VIEW) && (
                     <Link
                         to="/blog"
-                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                        className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         博客
@@ -66,7 +66,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.RESUME) && (
                     <Link
                         to="/resume"
-                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                        className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         简历
@@ -75,7 +75,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.ACTIVITY) && (
                     <Link
                         to="/activity-log"
-                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                        className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         Activity Log
@@ -84,7 +84,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.MATCH) && (
                     <Link
                         to="/2k-games"
-                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                        className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         2K Games
@@ -92,7 +92,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 )}
                 <Link
                     to="/ai-chat"
-                    className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                    className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                     onClick={() => setSidebarOpen(false)}
                 >
                     LLM / Agent
@@ -100,7 +100,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
                 {hasPermission(PERMISSIONS.USER_PERMISSION_MGMT) && (
                     <Link
                         to="/user-permission-mgmt"
-                        className="block px-3 py-2 rounded text-sm font-medium text-cyber-text hover:text-cyber-accent hover:bg-cyber-border/30 transition-colors"
+                        className="block px-3 py-2 rounded text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
                         onClick={() => setSidebarOpen(false)}
                     >
                         权限管理
