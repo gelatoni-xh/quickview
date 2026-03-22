@@ -22,6 +22,23 @@ jobs:
           env-slug: prod
           secret-path: /shared
           export-type: env
+          include-imports: true
+
+      - name: Verify Infisical secrets
+        run: |
+          if [ -z "$SERVER_HOST" ]; then
+            echo "❌ SERVER_HOST not found"
+            exit 1
+          fi
+          if [ -z "$SERVER_USER" ]; then
+            echo "❌ SERVER_USER not found"
+            exit 1
+          fi
+          if [ -z "$SERVER_PEM" ]; then
+            echo "❌ SERVER_PEM not found"
+            exit 1
+          fi
+          echo "✅ All secrets retrieved successfully"
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
